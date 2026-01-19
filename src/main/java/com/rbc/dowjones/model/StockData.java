@@ -1,21 +1,21 @@
 package com.rbc.dowjones.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name="stock_data")
+@Table(name="stock_data",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"stock", "date"})})
 public class StockData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
     private String stock;
-    private String date;
+    @Column(nullable = false)
+    private LocalDate date;
     private Double open;
     private Double close;
     private Long volume;
@@ -32,11 +32,11 @@ public class StockData {
         this.stock = stock;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

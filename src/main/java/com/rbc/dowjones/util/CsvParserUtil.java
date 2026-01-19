@@ -1,11 +1,13 @@
 package com.rbc.dowjones.util;
 
 import com.rbc.dowjones.model.StockData;
+import org.hibernate.annotations.Columns;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class CsvParserUtil {
                 StockData data= new StockData();
 
                 data.setStock(columns[0]);
-                data.setDate(columns[1]);
+                data.setDate(LocalDate.parse(columns[1]));
                 data.setOpen(Double.parseDouble(columns[2]));
                 data.setClose(Double.parseDouble(columns[3]));
                 data.setVolume(Long.parseLong(columns[4]));

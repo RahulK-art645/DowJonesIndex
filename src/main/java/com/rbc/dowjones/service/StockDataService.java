@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StockDataService {
@@ -27,8 +28,30 @@ public class StockDataService {
 
         List<StockData> records=csvParserUtil.parse(file);
 
-        repository.saveAll(records);
+        for(StockData stockData : records){
+
+            upsertStockData(stockData);
+        }
     }
+
+    private void upsertStockData(StockData stockData){
+
+        Optional<StockData> existing=repository.findByStockAndDate(stockData.getStock(),stockData.getDate());
+
+        if(existing.isPresent()) {
+
+            StockData dbData = existing.get();
+            dbData.setOpen(stockData.getOpen());
+            dbData.setClose(stockData.getClose());
+
+            dbData.setVolume(stockData.getVolume());
+            repository.save(dbData);
+        }else{
+
+            repository.save(stockData);
+        }
+        }
+
 
     public List<StockData> getByStock(String stock){
 
@@ -42,3 +65,4 @@ public class StockDataService {
     }
 
 }
+
