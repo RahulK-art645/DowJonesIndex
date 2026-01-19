@@ -33,7 +33,7 @@ public class CsvParserUtil {
 
                 data.setQuarter(Integer.parseInt(columns[0]));
                 data.setStock(columns[1]);
-                data.setDate(parseDate(columns[2]));
+                data.setDate(LocalDate.parse(columns[2]));
 
                 data.setOpen(parseDouble(columns[3]));
                 data.setHigh(parseDouble(columns[4]));
@@ -80,8 +80,5 @@ public class CsvParserUtil {
         return (v == null || v.isEmpty()) ? null : Integer.parseInt(v);
     }
 
-    private LocalDate parseDate(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
-        return LocalDate.parse(date, formatter);
-    }
+
 }
