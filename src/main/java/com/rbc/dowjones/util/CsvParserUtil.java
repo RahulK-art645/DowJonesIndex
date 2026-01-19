@@ -31,8 +31,8 @@ public class CsvParserUtil {
                 data.setStock(columns[0]);
                 data.setDate(columns[1]);
                 data.setOpen(Double.parseDouble(columns[2]));
-                data.setClose(Double.parseDouble(columns[5]));
-                data.setVolume(Long.parseLong(columns[6]));
+                data.setClose(Double.parseDouble(columns[3]));
+                data.setVolume(Long.parseLong(columns[4]));
                 records.add(data);
             }
 
