@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  dowjones-app:
+    build: .
+    container_name: dowjonesindex-app
+    ports:
+        - "8080:8080"
