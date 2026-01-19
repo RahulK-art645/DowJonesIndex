@@ -1,5 +1,8 @@
 package com.rbc.dowjones.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestPart;
 import com.rbc.dowjones.model.StockData;
@@ -22,8 +25,10 @@ public class StockDataController {
 
     }
 
+    @Operation(summary = "Upload csv file")
+    @ApiResponses({@ApiResponse( responseCode= "200", description="File uploaded successfully")})
     @PostMapping(value="/bulk-insert", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadBulkData(@RequestParam("file") MultipartFile file){
+    public ResponseEntity<String> uploadBulkData(@RequestPart("file") MultipartFile file){
 
         stockDataService.uploadBulkData(file);
         return ResponseEntity.ok("Bulk data uploaded successfully..");
