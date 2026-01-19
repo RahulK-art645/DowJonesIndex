@@ -1,7 +1,10 @@
 package com.rbc.dowjones.controller;
 
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestPart;
 import com.rbc.dowjones.model.StockData;
 import com.rbc.dowjones.service.StockDataService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +22,7 @@ public class StockDataController {
 
     }
 
-    @PostMapping("/bulk-insert")
+    @PostMapping(value="/bulk-insert", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadBulkData(@RequestParam("file") MultipartFile file){
 
         stockDataService.uploadBulkData(file);
