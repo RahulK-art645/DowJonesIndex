@@ -36,8 +36,18 @@ The solution is designed to be simple, clean, and easy to run locally, keeping i
 ### 4. Update an existing stock record using ID. (PUT /api/stock-data/{id})
 ### 5. Delete Stock Data by ID (DELETE /api/stock-data/{id})
 
+---
+
 ## Testing
 - Unit Tests Implemented
 - Service layer tests(Mockito)
 - Controller layer tests(@WebMvcTest)
 - Repository tests(@DataJpaTest)
+
+---
+
+## Validation & Error Handling
+- Input validation is implemented using Bean Validation ('@Valid')
+- Mandatory fields are validated at Controller layer
+- Invalida request returned HTTP 400 (Bad Request)
+- Validation scenarios are covered using unit tests with MockMvc
