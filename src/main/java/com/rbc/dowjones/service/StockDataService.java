@@ -34,7 +34,7 @@ public class StockDataService {
         }
     }
 
-    private void upsertStockData(StockData stockData){
+    public void upsertStockData(StockData stockData){
 
         Optional<StockData> existing=repository.findByStockAndDate(stockData.getStock(),stockData.getDate());
 
@@ -42,9 +42,20 @@ public class StockDataService {
 
             StockData dbData = existing.get();
             dbData.setOpen(stockData.getOpen());
+            dbData.setHigh(stockData.getHigh());
+            dbData.setLow(stockData.getLow());
+            dbData.setPercentChangePrice(stockData.getPercentChangePrice());
             dbData.setClose(stockData.getClose());
-
             dbData.setVolume(stockData.getVolume());
+            dbData.setPercentChangeVolumeOverLastWk(stockData.getPercentChangeVolumeOverLastWk());
+            dbData.setPreviousWeeksVolume(stockData.getPreviousWeeksVolume());
+            dbData.setNextWeeksOpen(stockData.getNextWeeksOpen());
+            dbData.setNextWeeksClose(stockData.getNextWeeksClose());
+            dbData.setPercentChangeNextWeeksPrice(stockData.getPercentChangeNextWeeksPrice());
+            dbData.setDaysToNextDividend(stockData.getDaysToNextDividend());
+            dbData.setPercentReturnNextDividend(stockData.getPercentReturnNextDividend());
+
+
             repository.save(dbData);
         }else{
 
@@ -62,6 +73,25 @@ public class StockDataService {
 
         return repository.save(stockData);
 
+    }
+
+    /* Update by ID */
+    public StockData updateById(Long id,StockData stockData){
+
+        StockData dbData=repository.findById(id).orElseThrow(()->new RuntimeException("Stock record not found"));
+        dbData.setOpen(stockData.getOpen());
+        dbData.setHigh(stockData.getHigh());
+        dbData.setLow(stockData.getLow());
+        dbData.setClose(stockData.getClose());
+        dbData.setVolume(stockData.getVolume());
+
+        return repository.save(dbData);
+
+    }
+
+    public void deleteById(Long id){
+
+        repository.deleteById(id);
     }
 
 }
