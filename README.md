@@ -9,7 +9,7 @@ The solution is designed to be simple, clean, and easy to run locally, keeping i
 ---
 
 ## Tech Stack
-- Java 11
+- Java 17
 - Spring Boot
 - Spring Data JPA
 - H2 In-Memory Database
@@ -30,4 +30,14 @@ The solution is designed to be simple, clean, and easy to run locally, keeping i
 
 ## API Endpoints
 
-### 1. Bulk Upload Stock Data
+### 1. Bulk Upload Stock Data (POST /api/stock-data/bulk-insert)
+### 2. Add Single Stock Record (POST /api/stock-data/add)
+### 3. Get Stock Data by Ticker Symbol (GET /api/stock-data/{stock})
+### 4. Update an existing stock record using ID. (PUT /api/stock-data/{id})
+### 5. Delete Stock Data by ID (DELETE /api/stock-data/{id})
+
+## Testing
+- Unit Tests Implemented
+- Service layer tests(Mockito)
+- Controller layer tests(@WebMvcTest)
+- Repository tests(@DataJpaTest)
