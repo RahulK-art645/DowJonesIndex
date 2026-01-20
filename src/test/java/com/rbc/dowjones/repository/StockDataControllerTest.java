@@ -22,17 +22,22 @@ public class StockDataControllerTest {
 
     @Test
     void addStock_shouldReturn200() throws Exception{
+
         mockMvc.perform(post("/api/stock-data/add").contentType(MediaType.APPLICATION_JSON).content("""
     {
     "stock":"CSCO",
     "date":"2020-01-01",
-    
-    
+    "open": "29",
+    "high": "87",
+    "close": "34",
+    "low": 7,
+    "volume": 1000
     }
     """)).andExpect(status().isOk());
 
     }
 
+    @Test
     void addStock_shouldFailValidation() throws Exception{
 
 

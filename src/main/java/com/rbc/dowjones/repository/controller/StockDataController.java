@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -46,7 +47,7 @@ public class StockDataController {
     /* Add Single stock record */
     @Operation(summary = "Add single stock record")
     @PostMapping("/add")
-    public ResponseEntity<StockData> addStockData(@RequestBody StockData data){
+    public ResponseEntity<StockData> addStockData(@Valid @RequestBody StockData data){
 
         StockData saved= stockDataService.addRecord(data);
         return ResponseEntity.ok(saved);
