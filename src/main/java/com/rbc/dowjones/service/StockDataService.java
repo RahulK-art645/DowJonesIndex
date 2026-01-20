@@ -84,6 +84,17 @@ public class StockDataService {
         dbData.setLow(stockData.getLow());
         dbData.setClose(stockData.getClose());
         dbData.setVolume(stockData.getVolume());
+        dbData.setQuarter(stockData.getQuarter());
+        dbData.setStock(stockData.getStock());
+        dbData.setDate(stockData.getDate());
+        dbData.setPercentChangePrice(stockData.getPercentChangePrice());
+        dbData.setPercentChangeVolumeOverLastWk(stockData.getPercentChangeVolumeOverLastWk());
+        dbData.setPreviousWeeksVolume(stockData.getPreviousWeeksVolume());
+        dbData.setNextWeeksOpen(stockData.getNextWeeksOpen());
+        dbData.setNextWeeksClose(stockData.getNextWeeksClose());
+        dbData.setPercentChangeNextWeeksPrice(stockData.getPercentChangeNextWeeksPrice());
+        dbData.setDaysToNextDividend(stockData.getDaysToNextDividend());
+        dbData.setPercentReturnNextDividend(stockData.getPercentReturnNextDividend());
 
         return repository.save(dbData);
 
