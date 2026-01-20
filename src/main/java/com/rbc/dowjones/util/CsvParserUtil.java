@@ -27,7 +27,7 @@ public class CsvParserUtil {
 
             while((line=reader.readLine()) != null){
 
-                String[] columns= line.split(",");
+                String[] columns= line.split(",", -1);
 
                 StockData data= new StockData();
 
