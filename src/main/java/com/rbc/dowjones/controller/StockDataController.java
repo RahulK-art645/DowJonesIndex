@@ -62,6 +62,8 @@ public class StockDataController {
         return ResponseEntity.ok(updated);
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete stock data by ID")
     public ResponseEntity<String> deleteStockData(@PathVariable Long id){
 
         stockDataService.deleteById(id);
