@@ -1,4 +1,4 @@
-package com.rbc.dowjones.model;
+package com.rbc.dowjones.repository.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -35,6 +35,10 @@ public class StockData {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getStock() {

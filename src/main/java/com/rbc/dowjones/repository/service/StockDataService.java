@@ -1,8 +1,8 @@
-package com.rbc.dowjones.service;
+package com.rbc.dowjones.repository.service;
 
-import com.rbc.dowjones.model.StockData;
-import com.rbc.dowjones.repository.StockDataRepository;
-import com.rbc.dowjones.util.CsvParserUtil;
+import com.rbc.dowjones.repository.model.StockData;
+import com.rbc.dowjones.repository.repository.StockDataRepository;
+import com.rbc.dowjones.repository.util.CsvParserUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

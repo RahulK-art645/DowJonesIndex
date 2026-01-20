@@ -1,14 +1,12 @@
-package com.rbc.dowjones.controller;
+package com.rbc.dowjones.repository.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.apache.coyote.Response;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestPart;
-import com.rbc.dowjones.model.StockData;
-import com.rbc.dowjones.service.StockDataService;
-import org.springframework.http.MediaType;
+import com.rbc.dowjones.repository.model.StockData;
+import com.rbc.dowjones.repository.service.StockDataService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,8 +1,8 @@
-package com.rbc.dowjones.repository;
+package com.rbc.dowjones.repository.repository;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import com.rbc.dowjones.model.StockData;
+import com.rbc.dowjones.repository.model.StockData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

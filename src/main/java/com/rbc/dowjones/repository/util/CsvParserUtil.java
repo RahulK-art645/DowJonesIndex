@@ -1,14 +1,11 @@
-package com.rbc.dowjones.util;
+package com.rbc.dowjones.repository.util;
 
-import com.rbc.dowjones.model.StockData;
-import org.hibernate.annotations.Columns;
+import com.rbc.dowjones.repository.model.StockData;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
-import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 

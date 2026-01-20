@@ -1,4 +1,4 @@
-package com.rbc.dowjones;
+package com.rbc.dowjones.repository;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
