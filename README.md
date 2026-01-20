@@ -51,3 +51,7 @@ The solution is designed to be simple, clean, and easy to run locally, keeping i
 - Mandatory fields are validated at Controller layer
 - Invalida request returned HTTP 400 (Bad Request)
 - Validation scenarios are covered using unit tests with MockMvc
+
+## API Documentation (Swagger)
+- Once the application is running locally, Swagger UI can be accessed at: 
+- http://localhost:8080/swagger-ui/index.html#/stock-data-controller/addStockData
