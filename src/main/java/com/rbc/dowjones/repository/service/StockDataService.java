@@ -44,7 +44,7 @@ public class StockDataService {
 
                 case "INSERTED" -> inserted++;
                 case "UPDATED" -> updated++;
-                case "Already Exists" ->alreadyExists++;
+                case "Already_Exists" ->alreadyExists++;
 
             }
 
@@ -69,8 +69,10 @@ public class StockDataService {
 
             StockData dbData = existing.get();
             if (isSame(dbData,stockData)){
-                return "Data Already Exists...Please try fresh one!";
+                return "ALREADY_EXISTS";
             }
+            dbData.setStock(stockData.getStock());
+            dbData.setQuarter(stockData.getQuarter());
             dbData.setOpen(stockData.getOpen());
             dbData.setHigh(stockData.getHigh());
             dbData.setLow(stockData.getLow());
@@ -87,16 +89,17 @@ public class StockDataService {
 
 
             repository.save(dbData);
-            return "Updated data";
+            return "UPDATED";
         }else{
 
             repository.save(stockData);
-            return "New Data Inserted";
+            return "INSERTED";
         }
         }
 
         private boolean isSame(StockData db, StockData csv){
         return Objects.equals(db.getOpen(), csv.getOpen()) &&
+                Objects.equals(db.getStock(),csv.getStock()) &&
                 Objects.equals(db.getQuarter(), csv.getQuarter()) &&
                 Objects.equals(db.getClose(), csv.getClose()) &&
                 Objects.equals(db.getHigh(), csv.getHigh()) &&
