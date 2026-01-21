@@ -28,7 +28,7 @@ public class CsvParserUtil {
 
                 StockData data= new StockData();
 
-                data.setQuarter(Integer.parseInt(columns[0]));
+                data.setQuarter(parseNullableInt(columns[0]));
                 data.setStock(columns[1]);
                 data.setDate(LocalDate.parse(columns[2]));
 
@@ -36,7 +36,7 @@ public class CsvParserUtil {
                 data.setHigh(parseNullableDouble(columns[4]));
                 data.setLow(parseNullableDouble(columns[5]));
                 data.setClose(parseNullableDouble(columns[6]));
-                data.setVolume(Long.parseLong(columns[7]));
+                data.setVolume(parseNullableLong(columns[7]));
 
                 data.setPercentChangePrice(parseNullableDouble(columns[8]));
                 data.setPercentChangeVolumeOverLastWk(parseNullableDouble(columns[9]));
