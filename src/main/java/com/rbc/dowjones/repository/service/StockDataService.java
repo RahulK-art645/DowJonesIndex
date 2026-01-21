@@ -15,9 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StockDataService {
@@ -53,8 +51,15 @@ public class StockDataService {
         int inserted=0;
         int updated=0;
         int alreadyExists=0;
+        int deleted=0;
+
+        Set<String> csvKeys=new HashSet<>();
 
         for(StockData stockData : records){
+
+            String key=stockData.getStock() + "_" + stockData.getDate();
+            csvKeys.add(key);
+
             String result = upsertStockData(stockData);
 
             switch (result){
@@ -65,6 +70,19 @@ public class StockDataService {
             }
 
         }
+
+        String stock=records.get(0).getStock();
+
+        List<StockData> dbRecords=repository.findByStock(stock);
+
+        for (StockData dbData : dbRecords){
+            String dbKey = dbData.getStock() + "_" + dbData.getDate();
+
+            if (!csvKeys.contains(dbKey)){
+                repository.delete(dbData);
+                deleted++;
+            }
+        }
         BulkUploadResponseDto response=new BulkUploadResponseDto();
         response.setTotalRecords(records.size());
         response.setInsertRecords(inserted);
@@ -72,6 +90,7 @@ public class StockDataService {
 
         response.setAlreadyExistingRecords(alreadyExists);
 
+        response.setDeletedRecords(deleted);
         response.setMessage("Bulk upload processed successfully..");
 
         return response;

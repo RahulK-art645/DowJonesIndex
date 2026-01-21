@@ -6,6 +6,7 @@ public class BulkUploadResponseDto {
     private int insertRecords;
     private int updatedRecords;
     private int alreadyExistingRecords;
+    private int deletedRecords;
 
     private String message;
 
@@ -43,6 +44,14 @@ public class BulkUploadResponseDto {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getDeletedRecords() {
+        return deletedRecords;
+    }
+
+    public void setDeletedRecords(int deletedRecords) {
+        this.deletedRecords = deletedRecords;
     }
 
     public void setMessage(String message) {
