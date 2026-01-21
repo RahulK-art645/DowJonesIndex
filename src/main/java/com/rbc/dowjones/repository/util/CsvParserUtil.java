@@ -32,10 +32,10 @@ public class CsvParserUtil {
                 data.setStock(columns[1]);
                 data.setDate(LocalDate.parse(columns[2]));
 
-                data.setOpen(parseDouble(columns[3]));
-                data.setHigh(parseDouble(columns[4]));
-                data.setLow(parseDouble(columns[5]));
-                data.setClose(parseDouble(columns[6]));
+                data.setOpen(parseNullableDouble(columns[3]));
+                data.setHigh(parseNullableDouble(columns[4]));
+                data.setLow(parseNullableDouble(columns[5]));
+                data.setClose(parseNullableDouble(columns[6]));
                 data.setVolume(Long.parseLong(columns[7]));
 
                 data.setPercentChangePrice(parseNullableDouble(columns[8]));
@@ -61,12 +61,20 @@ public class CsvParserUtil {
 
     // ---------- helper methods ----------
 
-    private Double parseDouble(String v) {
-        return Double.parseDouble(v.replace("$", ""));
-    }
+
 
     private Double parseNullableDouble(String v) {
-        return (v == null || v.trim().isEmpty()) ? null : parseDouble(v);
+       if(v==null) return null;
+
+       String value = v.replace("$","").trim();
+       if(value.isEmpty()) return null;
+
+       try{
+
+           return Double.valueOf(value);
+       }catch(NumberFormatException e){
+           return null;
+       }
     }
 
     private Long parseNullableLong(String v) {
@@ -84,7 +92,18 @@ public class CsvParserUtil {
     }
 
     private Integer parseNullableInt(String v) {
-        return (v == null || v.trim().isEmpty()) ? null : Integer.parseInt(v.trim());
+        if (v == null) return null;
+
+        String value = v.trim();
+
+        if(value.isEmpty()) return null;
+
+        try{
+
+            return Integer.valueOf(value);
+        }catch(NumberFormatException e){
+            return null;
+        }
     }
 
 
