@@ -70,7 +70,17 @@ public class CsvParserUtil {
     }
 
     private Long parseNullableLong(String v) {
-        return (v == null || v.trim().isEmpty()) ? null : Long.parseLong(v.trim());
+        if (v==null) return null;
+
+        String value=v.trim();
+        if(value.isEmpty()) return null;
+
+        try{
+            return Long.valueOf(value);
+        }catch (NumberFormatException e)
+        {
+            return null;
+        }
     }
 
     private Integer parseNullableInt(String v) {
