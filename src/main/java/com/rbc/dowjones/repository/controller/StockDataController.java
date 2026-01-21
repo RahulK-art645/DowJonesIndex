@@ -1,5 +1,7 @@
 package com.rbc.dowjones.repository.controller;
 
+import com.rbc.dowjones.repository.dto.StockDataRequestDto;
+import com.rbc.dowjones.repository.dto.StockDataResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -38,26 +40,26 @@ public class StockDataController {
    /*Get data by Stock Ticker */
     @Operation(summary = "Get stock data by stock ticker")
     @GetMapping("/{stock}")
-    public ResponseEntity<List<StockData>> getByStock(@PathVariable String stock){
+    public ResponseEntity<List<StockDataResponseDto>> getByStock(@PathVariable String stock){
 
-        List<StockData> data= stockDataService.getByStock(stock);
-        return ResponseEntity.ok(data);
+        List<StockDataResponseDto> responseDtos= stockDataService.getByStock(stock);
+        return ResponseEntity.ok(responseDtos);
     }
 
     /* Add Single stock record */
     @Operation(summary = "Add single stock record")
     @PostMapping("/add")
-    public ResponseEntity<StockData> addStockData(@Valid @RequestBody StockData data){
+    public ResponseEntity<StockDataResponseDto> addStockData(@Valid @RequestBody StockDataRequestDto requestDto){
 
-        StockData saved= stockDataService.addRecord(data);
+        StockDataResponseDto saved= stockDataService.addRecord(requestDto);
         return ResponseEntity.ok(saved);
     }
 
     @Operation(summary = "Update stock data by ID")
     @PutMapping("/{id}")
-    public ResponseEntity<StockData> updateStockData(@PathVariable Long id, @RequestBody StockData stockData){
+    public ResponseEntity<StockDataResponseDto> updateStockData(@PathVariable Long id, @RequestBody StockDataRequestDto requestDto){
 
-        StockData updated=stockDataService.updateById(id, stockData);
+        StockDataResponseDto updated=stockDataService.updateById(id, requestDto);
         return ResponseEntity.ok(updated);
     }
 

@@ -1,5 +1,8 @@
 package com.rbc.dowjones.repository.service;
 
+import com.rbc.dowjones.repository.dto.StockDataRequestDto;
+import com.rbc.dowjones.repository.dto.StockDataResponseDto;
+import com.rbc.dowjones.repository.mapper.StockDataMapper;
 import com.rbc.dowjones.repository.model.StockData;
 import com.rbc.dowjones.repository.repository.StockDataRepository;
 import com.rbc.dowjones.repository.util.CsvParserUtil;
@@ -64,39 +67,44 @@ public class StockDataService {
         }
 
 
-    public List<StockData> getByStock(String stock){
+    public List<StockDataResponseDto> getByStock(String stock){
 
-        return repository.findByStock(stock);
+        List<StockData> entities=repository.findByStock(stock);
+        return entities.stream().map(StockDataMapper::toResponseDto).toList();
     }
 
-    public StockData addRecord(StockData stockData){
+    public StockDataResponseDto addRecord(StockDataRequestDto requestDto){
 
-        return repository.save(stockData);
+        StockData entity=StockDataMapper.toEntity(requestDto);
+        StockData saved=repository.save(entity);
+        return StockDataMapper.toResponseDto(saved);
 
     }
 
     /* Update by ID */
-    public StockData updateById(Long id,StockData stockData){
+    public StockDataResponseDto updateById(Long id,StockDataRequestDto requestDto){
 
         StockData dbData=repository.findById(id).orElseThrow(()->new RuntimeException("Stock record not found"));
-        dbData.setOpen(stockData.getOpen());
-        dbData.setHigh(stockData.getHigh());
-        dbData.setLow(stockData.getLow());
-        dbData.setClose(stockData.getClose());
-        dbData.setVolume(stockData.getVolume());
-        dbData.setQuarter(stockData.getQuarter());
-        dbData.setStock(stockData.getStock());
-        dbData.setDate(stockData.getDate());
-        dbData.setPercentChangePrice(stockData.getPercentChangePrice());
-        dbData.setPercentChangeVolumeOverLastWk(stockData.getPercentChangeVolumeOverLastWk());
-        dbData.setPreviousWeeksVolume(stockData.getPreviousWeeksVolume());
-        dbData.setNextWeeksOpen(stockData.getNextWeeksOpen());
-        dbData.setNextWeeksClose(stockData.getNextWeeksClose());
-        dbData.setPercentChangeNextWeeksPrice(stockData.getPercentChangeNextWeeksPrice());
-        dbData.setDaysToNextDividend(stockData.getDaysToNextDividend());
-        dbData.setPercentReturnNextDividend(stockData.getPercentReturnNextDividend());
+        dbData.setOpen(requestDto.getOpen());
+        dbData.setHigh(requestDto.getHigh());
+        dbData.setLow(requestDto.getLow());
+        dbData.setClose(requestDto.getClose());
+        dbData.setVolume(requestDto.getVolume());
+        dbData.setQuarter(requestDto.getQuarter());
+        dbData.setStock(requestDto.getStock());
+        dbData.setDate(requestDto.getDate());
+        dbData.setPercentChangePrice(requestDto.getPercentChangePrice());
+        dbData.setPercentChangeVolumeOverLastWk(requestDto.getPercentChangeVolumeOverLastWk());
+        dbData.setPreviousWeeksVolume(requestDto.getPreviousWeeksVolume());
+        dbData.setNextWeeksOpen(requestDto.getNextWeeksOpen());
+        dbData.setNextWeeksClose(requestDto.getNextWeeksClose());
+        dbData.setPercentChangeNextWeeksPrice(requestDto.getPercentChangeNextWeeksPrice());
+        dbData.setDaysToNextDividend(requestDto.getDaysToNextDividend());
+        dbData.setPercentReturnNextDividend(requestDto.getPercentReturnNextDividend());
 
-        return repository.save(dbData);
+        StockData saved=repository.save(dbData);
+
+        return StockDataMapper.toResponseDto(saved);
 
     }
 
