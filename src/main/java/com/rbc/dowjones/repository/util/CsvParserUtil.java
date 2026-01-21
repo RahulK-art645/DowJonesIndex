@@ -66,15 +66,15 @@ public class CsvParserUtil {
     }
 
     private Double parseNullableDouble(String v) {
-        return (v == null || v.isEmpty()) ? null : parseDouble(v);
+        return (v == null || v.trim().isEmpty()) ? null : parseDouble(v);
     }
 
     private Long parseNullableLong(String v) {
-        return (v == null || v.isEmpty()) ? null : Long.parseLong(v);
+        return (v == null || v.trim().isEmpty()) ? null : Long.parseLong(v.trim());
     }
 
     private Integer parseNullableInt(String v) {
-        return (v == null || v.isEmpty()) ? null : Integer.parseInt(v);
+        return (v == null || v.trim().isEmpty()) ? null : Integer.parseInt(v.trim());
     }
 
 
