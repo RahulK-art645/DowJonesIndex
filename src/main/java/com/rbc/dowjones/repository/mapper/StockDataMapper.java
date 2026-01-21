@@ -13,6 +13,7 @@ public class StockDataMapper {
         }
         StockDataResponseDto dto = new StockDataResponseDto();
 
+        dto.setQuarter(entity.getQuarter());
         dto.setStock(entity.getStock());
         dto.setDate(entity.getDate());
 
