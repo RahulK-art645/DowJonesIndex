@@ -64,12 +64,22 @@ public class StockDataController {
         return ResponseEntity.ok(updated);
     }
 
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete stock data by ID")
     public ResponseEntity<String> deleteStockData(@PathVariable Long id){
 
         stockDataService.deleteById(id);
         return ResponseEntity.ok("Stock data deleted successfully..");
+
+    }
+
+    @GetMapping("/id{id}")
+    @Operation(summary = "Get Stock Data By Id")
+    public ResponseEntity<StockDataResponseDto> getStockDataById(@PathVariable Long id){
+
+        StockDataResponseDto response= stockDataService.getById(id);
+        return ResponseEntity.ok(response);
 
     }
 

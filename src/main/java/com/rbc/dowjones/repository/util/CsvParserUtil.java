@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,22 +40,22 @@ public class CsvParserUtil {
                 data.setStock(columns[1]);
                 data.setDate(LocalDate.parse(columns[2]));
 
-                data.setOpen(parseNullableDouble(columns[3]));
-                data.setHigh(parseNullableDouble(columns[4]));
-                data.setLow(parseNullableDouble(columns[5]));
-                data.setClose(parseNullableDouble(columns[6]));
+                data.setOpen(parseNullableBigDecimal(columns[3]));
+                data.setHigh(parseNullableBigDecimal(columns[4]));
+                data.setLow(parseNullableBigDecimal(columns[5]));
+                data.setClose(parseNullableBigDecimal(columns[6]));
                 data.setVolume(parseNullableLong(columns[7]));
 
-                data.setPercentChangePrice(parseNullableDouble(columns[8]));
-                data.setPercentChangeVolumeOverLastWk(parseNullableDouble(columns[9]));
+                data.setPercentChangePrice(parseNullableBigDecimal(columns[8]));
+                data.setPercentChangeVolumeOverLastWk(parseNullableBigDecimal(columns[9]));
                 data.setPreviousWeeksVolume(parseNullableLong(columns[10]));
 
-                data.setNextWeeksOpen(parseNullableDouble(columns[11]));
-                data.setNextWeeksClose(parseNullableDouble(columns[12]));
-                data.setPercentChangeNextWeeksPrice(parseNullableDouble(columns[13]));
+                data.setNextWeeksOpen(parseNullableBigDecimal(columns[11]));
+                data.setNextWeeksClose(parseNullableBigDecimal(columns[12]));
+                data.setPercentChangeNextWeeksPrice(parseNullableBigDecimal(columns[13]));
 
                 data.setDaysToNextDividend(parseNullableInt(columns[14]));
-                data.setPercentReturnNextDividend(parseNullableDouble(columns[15]));
+                data.setPercentReturnNextDividend(parseNullableBigDecimal(columns[15]));
 
                 records.add(data);
             }
@@ -70,7 +71,7 @@ public class CsvParserUtil {
 
 
 
-    private Double parseNullableDouble(String v) {
+    private BigDecimal parseNullableBigDecimal(String v) {
        if(v==null) return null;
 
        String value = v.replace("$","").trim();
@@ -78,7 +79,7 @@ public class CsvParserUtil {
 
        try{
 
-           return Double.valueOf(value);
+           return new BigDecimal(value);
        }catch(NumberFormatException e){
            return null;
        }

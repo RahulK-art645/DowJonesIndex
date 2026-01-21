@@ -13,6 +13,8 @@ import com.rbc.dowjones.repository.util.CsvParserUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -77,38 +79,59 @@ public class StockDataService {
 
     public String upsertStockData(StockData stockData){
 
+        //Null check
+        if (stockData.getStock() == null || stockData.getDate() == null){
+            throw new BadRequestException("Stock and date must not be null");
+        }
+
+        //Future date check
+        if (stockData.getDate().isAfter(LocalDate.now())){
+
+            throw new BadRequestException("Future dates are not allowed");
+        }
+
+        //price validation
+        if (stockData.getOpen().compareTo(BigDecimal.ZERO) <=0  || stockData.getClose().compareTo(BigDecimal.ZERO) <=0 || stockData.getHigh().compareTo(BigDecimal.ZERO) <=0 ||
+        stockData.getLow().compareTo(BigDecimal.ZERO) <=0){
+
+            throw new BadRequestException("Price values must be greater than zero");
+        }
+
         Optional<StockData> existing=repository.findByStockAndDate(stockData.getStock(),stockData.getDate());
 
         if(existing.isPresent()) {
 
             StockData dbData = existing.get();
+
             if (isSame(dbData,stockData)){
                 return "ALREADY_EXISTS";
             }
-
-            dbData.setQuarter(stockData.getQuarter());
-            dbData.setOpen(stockData.getOpen());
-            dbData.setHigh(stockData.getHigh());
-            dbData.setLow(stockData.getLow());
-            dbData.setPercentChangePrice(stockData.getPercentChangePrice());
-            dbData.setClose(stockData.getClose());
-            dbData.setVolume(stockData.getVolume());
-            dbData.setPercentChangeVolumeOverLastWk(stockData.getPercentChangeVolumeOverLastWk());
-            dbData.setPreviousWeeksVolume(stockData.getPreviousWeeksVolume());
-            dbData.setNextWeeksOpen(stockData.getNextWeeksOpen());
-            dbData.setNextWeeksClose(stockData.getNextWeeksClose());
-            dbData.setPercentChangeNextWeeksPrice(stockData.getPercentChangeNextWeeksPrice());
-            dbData.setDaysToNextDividend(stockData.getDaysToNextDividend());
-            dbData.setPercentReturnNextDividend(stockData.getPercentReturnNextDividend());
-
+            copyUpdatableField(dbData, stockData);
 
             repository.save(dbData);
             return "UPDATED";
-        }else{
+        }
 
             repository.save(stockData);
             return "INSERTED";
+
         }
+        private void  copyUpdatableField(StockData dbData, StockData newData){
+
+            dbData.setQuarter(newData.getQuarter());
+            dbData.setOpen(newData.getOpen());
+            dbData.setHigh(newData.getHigh());
+            dbData.setLow(newData.getLow());
+            dbData.setClose(newData.getClose());
+            dbData.setVolume(newData.getVolume());
+            dbData.setPercentChangePrice(newData.getPercentChangePrice());
+            dbData.setPercentChangeVolumeOverLastWk(newData.getPercentChangeVolumeOverLastWk());
+            dbData.setPreviousWeeksVolume(newData.getPreviousWeeksVolume());
+            dbData.setNextWeeksOpen(newData.getNextWeeksOpen());
+            dbData.setNextWeeksClose(newData.getNextWeeksClose());
+            dbData.setPercentChangeNextWeeksPrice(newData.getPercentChangeNextWeeksPrice());
+            dbData.setDaysToNextDividend(newData.getDaysToNextDividend());
+            dbData.setPercentReturnNextDividend(newData.getPercentReturnNextDividend());
         }
 
         private boolean isSame(StockData db, StockData csv){
@@ -148,24 +171,23 @@ public class StockDataService {
     /* Update by ID */
     public StockDataResponseDto updateById(Long id,StockDataRequestDto requestDto){
 
-        StockData dbData=repository.findById(id).orElseThrow(()->new ResourceNotFoundException("Stock record not found with id" +id));
-        dbData.setOpen(requestDto.getOpen());
-        dbData.setHigh(requestDto.getHigh());
-        dbData.setLow(requestDto.getLow());
-        dbData.setClose(requestDto.getClose());
-        dbData.setVolume(requestDto.getVolume());
-        dbData.setQuarter(requestDto.getQuarter());
-        dbData.setStock(requestDto.getStock());
-        dbData.setDate(requestDto.getDate());
-        dbData.setPercentChangePrice(requestDto.getPercentChangePrice());
-        dbData.setPercentChangeVolumeOverLastWk(requestDto.getPercentChangeVolumeOverLastWk());
-        dbData.setPreviousWeeksVolume(requestDto.getPreviousWeeksVolume());
-        dbData.setNextWeeksOpen(requestDto.getNextWeeksOpen());
-        dbData.setNextWeeksClose(requestDto.getNextWeeksClose());
-        dbData.setPercentChangeNextWeeksPrice(requestDto.getPercentChangeNextWeeksPrice());
-        dbData.setDaysToNextDividend(requestDto.getDaysToNextDividend());
-        dbData.setPercentReturnNextDividend(requestDto.getPercentReturnNextDividend());
+        if (id == null || id <=0){
+            throw new BadRequestException("Invalid ID");
+        }
+        StockData dbData=repository.findById(id).orElseThrow(()->new ResourceNotFoundException("Stock data not found"));
 
+        //Unique field should not change
+        if (!dbData.getStock().equals(requestDto.getDate())){
+            throw new BadRequestException("Stock and date can not be updated");
+        }
+        if (requestDto.getOpen().compareTo(BigDecimal.ZERO) <=0 || requestDto.getClose().compareTo(BigDecimal.ZERO) <=0 ||requestDto.getHigh().compareTo(BigDecimal.ZERO) <=0 ||
+
+        requestDto.getLow().compareTo(BigDecimal.ZERO) <=0){
+
+            throw new BadRequestException("price values must be greater than zero");
+        }
+
+        copyUpdatableField(dbData,StockDataMapper.toEntity(requestDto));
         StockData saved=repository.save(dbData);
 
         return StockDataMapper.toResponseDto(saved);
@@ -174,7 +196,25 @@ public class StockDataService {
 
     public void deleteById(Long id){
 
+        if (id == null || id <= 0){
+            throw new BadRequestException("Invalid ID");
+        }
+        if (!repository.existsById(id)){
+            throw new ResourceNotFoundException("Stock data not found");
+        }
         repository.deleteById(id);
+    }
+
+    public StockDataResponseDto getById(Long id){
+
+        if (id == null || id <=0){
+            throw new BadRequestException("Invalid id format");
+        }
+        StockData data=repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Stock data not found"));
+
+      return  StockDataMapper.toResponseDto(data);
+
+
     }
 
 }

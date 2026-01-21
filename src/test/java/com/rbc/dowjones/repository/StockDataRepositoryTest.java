@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,10 +24,10 @@ public class StockDataRepositoryTest {
         StockData data=new StockData();
         data.setStock("CSCO");
         data.setDate(LocalDate.now());
-        data.setOpen(10.0);
-        data.setHigh(13.0);
-        data.setLow(9.0);
-        data.setClose(11.0);
+        data.setOpen(BigDecimal.valueOf(10.0));
+        data.setHigh(BigDecimal.valueOf(13.0));
+        data.setLow(BigDecimal.valueOf(9.0));
+        data.setClose(BigDecimal.valueOf(11.0));
         data.setVolume(1000L);
 
         repository.save(data);

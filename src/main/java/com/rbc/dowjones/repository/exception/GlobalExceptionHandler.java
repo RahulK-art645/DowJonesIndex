@@ -11,33 +11,22 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponseDto> handleBadRequest(BadRequestException ex) {
-        return new ResponseEntity<>(
-                new ErrorResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST
-        );
+        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleNotFound(ResourceNotFoundException ex) {
-        return new ResponseEntity<>(
-                new ErrorResponseDto(ex.getMessage(), HttpStatus.NOT_FOUND.value()),
-                HttpStatus.NOT_FOUND
-        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(ex.getMessage(), HttpStatus.NO_CONTENT.value()));
     }
 
     @ExceptionHandler(CsvProcessingException.class)
     public ResponseEntity<ErrorResponseDto> handleCsvError(CsvProcessingException ex) {
-        return new ResponseEntity<>(
-                new ErrorResponseDto(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY.value()),
-                HttpStatus.UNPROCESSABLE_ENTITY
-        );
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ErrorResponseDto(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY.value()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGeneric(Exception ex) {
-        return new ResponseEntity<>(
-                new ErrorResponseDto("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value()),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponseDto("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
 }

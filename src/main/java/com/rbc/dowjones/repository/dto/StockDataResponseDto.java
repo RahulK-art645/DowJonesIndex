@@ -1,5 +1,6 @@
 package com.rbc.dowjones.repository.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class StockDataResponseDto {
@@ -7,22 +8,29 @@ public class StockDataResponseDto {
     private Integer quarter;
     private String stock;
     private LocalDate date;
-    private Double open;
-    private Double high;
-    private Double low;
-    private Double close;
+    private BigDecimal open;
+    private BigDecimal high;
+    private BigDecimal low;
+    private BigDecimal close;
     private Long volume;
 
-    private Double percentChangePrice;
-    private Double percentChangeVolumeOverLastWk;
+    private BigDecimal percentChangePrice;
+    private BigDecimal percentChangeVolumeOverLastWk;
     private Long previousWeeksVolume;
-    private Double nextWeeksOpen;
-    private Double nextWeeksClose;
-    private Double percentChangeNextWeeksPrice;
+    private BigDecimal nextWeeksOpen;
+    private BigDecimal nextWeeksClose;
+    private BigDecimal percentChangeNextWeeksPrice;
 
     private Integer daysToNextDividend;
-    private Double percentReturnNextDividend;
+    private BigDecimal percentReturnNextDividend;
 
+    public Integer getQuarter() {
+        return quarter;
+    }
+
+    public void setQuarter(Integer quarter) {
+        this.quarter = quarter;
+    }
 
     public String getStock() {
         return stock;
@@ -40,19 +48,35 @@ public class StockDataResponseDto {
         this.date = date;
     }
 
-    public Double getOpen() {
+    public BigDecimal getOpen() {
         return open;
     }
 
-    public void setOpen(Double open) {
+    public void setOpen(BigDecimal open) {
         this.open = open;
     }
 
-    public Double getClose() {
+    public BigDecimal getHigh() {
+        return high;
+    }
+
+    public void setHigh(BigDecimal high) {
+        this.high = high;
+    }
+
+    public BigDecimal getLow() {
+        return low;
+    }
+
+    public void setLow(BigDecimal low) {
+        this.low = low;
+    }
+
+    public BigDecimal getClose() {
         return close;
     }
 
-    public void setClose(Double close) {
+    public void setClose(BigDecimal close) {
         this.close = close;
     }
 
@@ -64,43 +88,19 @@ public class StockDataResponseDto {
         this.volume = volume;
     }
 
-    public Integer getQuarter() {
-        return quarter;
-    }
-
-    public void setQuarter(Integer quarter) {
-        this.quarter = quarter;
-    }
-
-    public Double getHigh() {
-        return high;
-    }
-
-    public void setHigh(Double high) {
-        this.high = high;
-    }
-
-    public Double getLow() {
-        return low;
-    }
-
-    public void setLow(Double low) {
-        this.low = low;
-    }
-
-    public Double getPercentChangePrice() {
+    public BigDecimal getPercentChangePrice() {
         return percentChangePrice;
     }
 
-    public void setPercentChangePrice(Double percentChangePrice) {
+    public void setPercentChangePrice(BigDecimal percentChangePrice) {
         this.percentChangePrice = percentChangePrice;
     }
 
-    public Double getPercentChangeVolumeOverLastWk() {
+    public BigDecimal getPercentChangeVolumeOverLastWk() {
         return percentChangeVolumeOverLastWk;
     }
 
-    public void setPercentChangeVolumeOverLastWk(Double percentChangeVolumeOverLastWk) {
+    public void setPercentChangeVolumeOverLastWk(BigDecimal percentChangeVolumeOverLastWk) {
         this.percentChangeVolumeOverLastWk = percentChangeVolumeOverLastWk;
     }
 
@@ -112,27 +112,27 @@ public class StockDataResponseDto {
         this.previousWeeksVolume = previousWeeksVolume;
     }
 
-    public Double getNextWeeksOpen() {
+    public BigDecimal getNextWeeksOpen() {
         return nextWeeksOpen;
     }
 
-    public void setNextWeeksOpen(Double nextWeeksOpen) {
+    public void setNextWeeksOpen(BigDecimal nextWeeksOpen) {
         this.nextWeeksOpen = nextWeeksOpen;
     }
 
-    public Double getNextWeeksClose() {
+    public BigDecimal getNextWeeksClose() {
         return nextWeeksClose;
     }
 
-    public void setNextWeeksClose(Double nextWeeksClose) {
+    public void setNextWeeksClose(BigDecimal nextWeeksClose) {
         this.nextWeeksClose = nextWeeksClose;
     }
 
-    public Double getPercentChangeNextWeeksPrice() {
+    public BigDecimal getPercentChangeNextWeeksPrice() {
         return percentChangeNextWeeksPrice;
     }
 
-    public void setPercentChangeNextWeeksPrice(Double percentChangeNextWeeksPrice) {
+    public void setPercentChangeNextWeeksPrice(BigDecimal percentChangeNextWeeksPrice) {
         this.percentChangeNextWeeksPrice = percentChangeNextWeeksPrice;
     }
 
@@ -144,11 +144,11 @@ public class StockDataResponseDto {
         this.daysToNextDividend = daysToNextDividend;
     }
 
-    public Double getPercentReturnNextDividend() {
+    public BigDecimal getPercentReturnNextDividend() {
         return percentReturnNextDividend;
     }
 
-    public void setPercentReturnNextDividend(Double percentReturnNextDividend) {
+    public void setPercentReturnNextDividend(BigDecimal percentReturnNextDividend) {
         this.percentReturnNextDividend = percentReturnNextDividend;
     }
 }
