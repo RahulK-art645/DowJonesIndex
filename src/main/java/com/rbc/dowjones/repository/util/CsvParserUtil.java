@@ -24,7 +24,14 @@ public class CsvParserUtil {
 
             while((line=reader.readLine()) != null){
 
+                if (line.trim().isEmpty()){
+                    continue; // skip emty lines
+                }
                 String[] columns= line.split(",", -1);
+
+                if(columns.length < 16){
+                    continue; // skip Invalid/ incomplete
+                }
 
                 StockData data= new StockData();
 
