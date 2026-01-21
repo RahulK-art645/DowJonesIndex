@@ -44,8 +44,7 @@ public class StockDataService {
 
                 case "INSERTED" -> inserted++;
                 case "UPDATED" -> updated++;
-                case "Already_Exists" ->alreadyExists++;
-
+                case "ALREADY_EXISTS" ->alreadyExists++;
             }
 
         }
@@ -71,7 +70,7 @@ public class StockDataService {
             if (isSame(dbData,stockData)){
                 return "ALREADY_EXISTS";
             }
-            dbData.setStock(stockData.getStock());
+
             dbData.setQuarter(stockData.getQuarter());
             dbData.setOpen(stockData.getOpen());
             dbData.setHigh(stockData.getHigh());
@@ -99,7 +98,6 @@ public class StockDataService {
 
         private boolean isSame(StockData db, StockData csv){
         return Objects.equals(db.getOpen(), csv.getOpen()) &&
-                Objects.equals(db.getStock(),csv.getStock()) &&
                 Objects.equals(db.getQuarter(), csv.getQuarter()) &&
                 Objects.equals(db.getClose(), csv.getClose()) &&
                 Objects.equals(db.getHigh(), csv.getHigh()) &&
