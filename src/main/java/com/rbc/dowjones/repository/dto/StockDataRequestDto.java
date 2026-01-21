@@ -1,28 +1,66 @@
 package com.rbc.dowjones.repository.dto;
 
-
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class StockDataRequestDto {
 
+
+    @PositiveOrZero
     private Integer quarter;
+
+    @NotBlank
+    @Pattern(regexp = "^[A-Z]{1,10}$",message = "Stock must be 1 to 10 uppercase letters")
     private String stock;
+
+    @NotNull
+    @PastOrPresent
     private LocalDate date;
+
+    @NotNull
+    @DecimalMin(value = "0.01", inclusive = true)
     private BigDecimal open;
+
+    @NotNull
+    @DecimalMin(value = "0.01", inclusive = true)
     private BigDecimal high;
+
+    @NotNull
+    @DecimalMin(value = "0.01",inclusive = true)
     private BigDecimal low;
+
+    @NotNull
+    @DecimalMin(value = "0.01", inclusive = true)
     private BigDecimal close;
+
+    @PositiveOrZero
     private Long volume;
 
+    @DecimalMin(value = "-100.00")
     private BigDecimal percentChangePrice;
+
+    @DecimalMin(value = "=100.00")
     private BigDecimal percentChangeVolumeOverLastWk;
+
+    @PositiveOrZero
     private Long previousWeeksVolume;
+
+    @DecimalMin(value = "0.00")
     private BigDecimal nextWeeksOpen;
+
+    @DecimalMin(value = "0.00")
     private BigDecimal nextWeeksClose;
+
+    @DecimalMin(value = "-100.00")
     private BigDecimal percentChangeNextWeeksPrice;
 
+
+
+    @PositiveOrZero
     private Integer daysToNextDividend;
+
+    @DecimalMin(value = "0.00")
     private BigDecimal percentReturnNextDividend;
 
 
