@@ -3,6 +3,9 @@ package com.rbc.dowjones.repository.service;
 import com.rbc.dowjones.repository.dto.BulkUploadResponseDto;
 import com.rbc.dowjones.repository.dto.StockDataRequestDto;
 import com.rbc.dowjones.repository.dto.StockDataResponseDto;
+import com.rbc.dowjones.repository.exception.BadRequestException;
+import com.rbc.dowjones.repository.exception.CsvProcessingException;
+import com.rbc.dowjones.repository.exception.ResourceNotFoundException;
 import com.rbc.dowjones.repository.mapper.StockDataMapper;
 import com.rbc.dowjones.repository.model.StockData;
 import com.rbc.dowjones.repository.repository.StockDataRepository;
@@ -31,7 +34,19 @@ public class StockDataService {
     //Bulk upload
     public BulkUploadResponseDto uploadBulkData(MultipartFile file){
 
-        List<StockData> records=csvParserUtil.parse(file);
+        if (file.isEmpty()){
+            throw new BadRequestException("Uploaded file is empty");
+        }
+        List<StockData> records;
+        try{
+            records=csvParserUtil.parse(file);
+
+        }catch (Exception e){
+            throw new CsvProcessingException("Invalid CSV format or data issue");
+        }
+        if (records.isEmpty()){
+            throw new BadRequestException("No records found in CSV file");
+        }
 
         int inserted=0;
         int updated=0;
@@ -133,7 +148,7 @@ public class StockDataService {
     /* Update by ID */
     public StockDataResponseDto updateById(Long id,StockDataRequestDto requestDto){
 
-        StockData dbData=repository.findById(id).orElseThrow(()->new RuntimeException("Stock record not found"));
+        StockData dbData=repository.findById(id).orElseThrow(()->new ResourceNotFoundException("Stock record not found with id" +id));
         dbData.setOpen(requestDto.getOpen());
         dbData.setHigh(requestDto.getHigh());
         dbData.setLow(requestDto.getLow());
