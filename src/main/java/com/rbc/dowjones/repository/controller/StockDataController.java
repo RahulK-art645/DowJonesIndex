@@ -1,5 +1,6 @@
 package com.rbc.dowjones.repository.controller;
 
+import com.rbc.dowjones.repository.dto.BulkUploadResponseDto;
 import com.rbc.dowjones.repository.dto.StockDataRequestDto;
 import com.rbc.dowjones.repository.dto.StockDataResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,10 +32,10 @@ public class StockDataController {
     @Operation(summary = "Upload csv file for bulk stock data insert")
     @ApiResponses({@ApiResponse( responseCode= "200", description="File uploaded successfully")})
     @PostMapping(value="/bulk-insert", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadBulkData(@RequestPart("file") MultipartFile file){
+    public ResponseEntity<BulkUploadResponseDto> uploadBulkData(@RequestPart("file") MultipartFile file){
 
-        stockDataService.uploadBulkData(file);
-        return ResponseEntity.ok("Bulk data uploaded successfully..");
+        BulkUploadResponseDto respponse=stockDataService.uploadBulkData(file);
+        return ResponseEntity.ok(respponse);
     }
 
    /*Get data by Stock Ticker */

@@ -1,5 +1,6 @@
 package com.rbc.dowjones.repository.service;
 
+import com.rbc.dowjones.repository.dto.BulkUploadResponseDto;
 import com.rbc.dowjones.repository.dto.StockDataRequestDto;
 import com.rbc.dowjones.repository.dto.StockDataResponseDto;
 import com.rbc.dowjones.repository.mapper.StockDataMapper;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,23 +29,48 @@ public class StockDataService {
     }
 
     //Bulk upload
-    public void uploadBulkData(MultipartFile file){
+    public BulkUploadResponseDto uploadBulkData(MultipartFile file){
 
         List<StockData> records=csvParserUtil.parse(file);
 
-        for(StockData stockData : records){
+        int inserted=0;
+        int updated=0;
+        int alreadyExists=0;
 
-            upsertStockData(stockData);
+        for(StockData stockData : records){
+            String result = upsertStockData(stockData);
+
+            switch (result){
+
+                case "INSERTED" -> inserted++;
+                case "UPDATED" -> updated++;
+                case "Already Exists" ->alreadyExists++;
+
+            }
+
         }
+        BulkUploadResponseDto response=new BulkUploadResponseDto();
+        response.setTotalRecords(records.size());
+        response.setInsertRecords(inserted);
+        response.setUpdatedRecords(updated);
+
+        response.setAlreadyExistingRecords(alreadyExists);
+
+        response.setMessage("Bulk upload processed successfully..");
+
+        return response;
     }
 
-    public void upsertStockData(StockData stockData){
+    public String upsertStockData(StockData stockData){
 
         Optional<StockData> existing=repository.findByStockAndDate(stockData.getStock(),stockData.getDate());
 
         if(existing.isPresent()) {
 
             StockData dbData = existing.get();
+            if (isSame(dbData,stockData)){
+                return "Data Already Exists...Please try fresh one!";
+            }
             dbData.setOpen(stockData.getOpen());
             dbData.setHigh(stockData.getHigh());
             dbData.setLow(stockData.getLow());
@@ -60,10 +87,31 @@ public class StockDataService {
 
 
             repository.save(dbData);
+            return "Updated data";
         }else{
 
             repository.save(stockData);
+            return "New Data Inserted";
         }
+        }
+
+        private boolean isSame(StockData db, StockData csv){
+        return Objects.equals(db.getOpen(), csv.getOpen()) &&
+                Objects.equals(db.getQuarter(), csv.getQuarter()) &&
+                Objects.equals(db.getClose(), csv.getClose()) &&
+                Objects.equals(db.getHigh(), csv.getHigh()) &&
+                Objects.equals(db.getLow(), csv.getLow()) &&
+                Objects.equals(db.getVolume(), csv.getVolume()) &&
+                Objects.equals(db.getPercentChangePrice(), csv.getPercentChangePrice()) &&
+                Objects.equals(db.getPercentChangeVolumeOverLastWk(), csv.getPercentChangeVolumeOverLastWk()) &&
+                Objects.equals(db.getPreviousWeeksVolume(), csv.getPreviousWeeksVolume()) &&
+                Objects.equals(db.getNextWeeksOpen(), csv.getNextWeeksOpen()) &&
+                Objects.equals(db.getNextWeeksClose(), csv.getNextWeeksClose()) &&
+                Objects.equals(db.getPercentChangeNextWeeksPrice(), csv.getPercentChangeNextWeeksPrice()) &&
+                Objects.equals(db.getDaysToNextDividend(), csv.getDaysToNextDividend()) &&
+                Objects.equals(db.getPercentReturnNextDividend(), csv.getPercentReturnNextDividend());
+
+
         }
 
 
