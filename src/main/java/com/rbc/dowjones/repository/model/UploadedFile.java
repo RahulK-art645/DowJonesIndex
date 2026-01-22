@@ -4,14 +4,14 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "uploaded_files", uniqueConstraints ={ @UniqueConstraint(columnNames = "fileHash")})
+@Table(name = "uploaded_files", uniqueConstraints ={ @UniqueConstraint(columnNames = "file_Hash")})
 public class UploadedFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "file_hash", unique = true)
+    @Column(name = "file_hash", unique = true, length = 64)
     private String fileHash;
 
     private LocalDateTime uploadedAt=LocalDateTime.now();
