@@ -3,64 +3,85 @@ package com.rbc.dowjones.repository.dto;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.models.examples.Example;
 
+@Schema(description = "Reqest DTO for adding or updating stock data")
 public class StockDataRequestDto {
 
 
-    @PositiveOrZero
+    @Schema(example = "1", description = "Financial quarter (1 to 5)", allowableValues = {"1","2","3", "4", "5"})
+    @NotNull(message = "Quarter is mandatory")
+    @Min(value=1,message = "Quarter must be between 1 to 5")
+    @Max(value = 5, message = "Quarter must be between 1 to 5")
     private Integer quarter;
 
-    @NotBlank
+    @Schema(example = "AAPL", description = "Stock ticker symbol (1 to 10 uppercase letters)")
+    @NotBlank(message = "Stock is mandatory")
     @Pattern(regexp = "^[A-Z]{1,10}$",message = "Stock must be 1 to 10 uppercase letters")
     private String stock;
 
-    @NotNull
-    @PastOrPresent
+    @Schema(example = "2024-01-01", description = "Trading date")
+    @NotNull(message = "Date is mandatory")
+    @PastOrPresent(message = "Date can not be in the future")
     private LocalDate date;
 
-    @NotNull
-    @DecimalMin(value = "0.01", inclusive = true)
+    @Schema(example = "130.75", description = "Opening price")
+    @NotNull(message = "Open price is mandatory")
+    @DecimalMin(value = "0.01", inclusive = true, message = "Opne price must be greater that zero")
     private BigDecimal open;
 
-    @NotNull
-    @DecimalMin(value = "0.01", inclusive = true)
+    @Schema(example = "130.75", description = "Lowest price")
+    @NotNull(message = "High price is mandatory")
+    @DecimalMin(value = "0.01", inclusive = true, message = "High price must be greater than zero")
     private BigDecimal high;
 
-    @NotNull
-    @DecimalMin(value = "0.01",inclusive = true)
+    @Schema(example = "115.25", description = "Lowest price")
+    @NotNull(message = "Low price is mandatory")
+    @DecimalMin(value = "0.01",inclusive = true, message = "Low price must be greater than zero")
     private BigDecimal low;
 
-    @NotNull
-    @DecimalMin(value = "0.01", inclusive = true)
+    @Schema(example = "125.40", description = "Closing price")
+    @NotNull(message = "Closing price is mandatory")
+    @DecimalMin(value = "0.01", inclusive = true, message = "Low price must be greater than zero")
     private BigDecimal close;
 
-    @PositiveOrZero
+    @Schema(example = "1000000", description = "Trading volume")
+    @PositiveOrZero(message = "Volume must be zero or positive")
     private Long volume;
 
-    @DecimalMin(value = "-100.00")
+    @Schema(example = "-2.45", description = "Percent change in price")
+    @DecimalMin(value = "-100.00", message = "percent change price can not be less than -100")
     private BigDecimal percentChangePrice;
 
-    @DecimalMin(value = "=100.00")
+    @Schema(example = "5.60", description ="Percent change volume over last week")
+    @DecimalMin(value = "=100.00", message = "Percent change volume can not be less than -100")
     private BigDecimal percentChangeVolumeOverLastWk;
 
-    @PositiveOrZero
+    @Schema(example = "900000", description = "Previous week's volume")
+    @PositiveOrZero(message = "Previous week volume must be zero or positive")
     private Long previousWeeksVolume;
 
-    @DecimalMin(value = "0.00")
+    @Schema(example = "128.00", description = "Next week's open price")
+    @DecimalMin(value = "0.00", message = "Next week open must be positive")
     private BigDecimal nextWeeksOpen;
 
-    @DecimalMin(value = "0.00")
+    @Schema(example = "135.00", description = "Next week's close price")
+    @DecimalMin(value = "0.00", message = "Next week close must be positive")
     private BigDecimal nextWeeksClose;
 
-    @DecimalMin(value = "-100.00")
+    @Schema(example = "4.25", description = "Percent change next week's price")
+    @DecimalMin(value = "-100.00", message = "Percent change next week price can not be less than -100")
     private BigDecimal percentChangeNextWeeksPrice;
 
 
 
-    @PositiveOrZero
+    @Schema(example = "30", description = "Days to next dividend")
+    @PositiveOrZero(message = "Days to next dividend must be zero or positive")
     private Integer daysToNextDividend;
 
-    @DecimalMin(value = "0.00")
+    @Schema(example = "1.25", description = "Percent retun next dividend")
+    @DecimalMin(value = "0.00", message = "Percent retun next dividend must be positive")
     private BigDecimal percentReturnNextDividend;
 
 

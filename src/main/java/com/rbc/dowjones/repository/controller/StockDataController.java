@@ -52,15 +52,10 @@ public class StockDataController {
     }
 
     /* Add Single stock record */
+    @Operation(summary = "Add single stock record")
     @PostMapping(value = "/add",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Add single stock record",
-            operationId = "addStockData",
-    requestBody= @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true,content = @Content(
-            mediaType = "application/json", schema = @Schema(implementation = StockDataRequestDto.class)
-    )))
-
     public ResponseEntity<StockDataResponseDto> addStockData(@Valid @RequestBody StockDataRequestDto requestDto){
 
         StockDataResponseDto saved= stockDataService.addRecord(requestDto);
