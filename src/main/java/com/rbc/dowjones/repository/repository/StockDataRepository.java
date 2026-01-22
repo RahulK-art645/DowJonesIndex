@@ -15,4 +15,6 @@ public interface StockDataRepository extends JpaRepository<StockData,Long> {
     Optional<StockData> findByStockAndDate(String stock, LocalDate date);
 
 
+
+
 }

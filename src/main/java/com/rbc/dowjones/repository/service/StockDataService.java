@@ -8,11 +8,15 @@ import com.rbc.dowjones.repository.exception.CsvProcessingException;
 import com.rbc.dowjones.repository.exception.ResourceNotFoundException;
 import com.rbc.dowjones.repository.mapper.StockDataMapper;
 import com.rbc.dowjones.repository.model.StockData;
+import com.rbc.dowjones.repository.model.UploadedFile;
 import com.rbc.dowjones.repository.repository.StockDataRepository;
+import com.rbc.dowjones.repository.repository.UploadedFileRepository;
 import com.rbc.dowjones.repository.util.CsvParserUtil;
+import com.rbc.dowjones.repository.util.FileHashUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
@@ -21,22 +25,29 @@ import java.util.stream.Collectors;
 @Service
 public class StockDataService {
 
+    private final UploadedFileRepository uploadedFileRepository;
     private final StockDataRepository repository;
 
     private final CsvParserUtil csvParserUtil;
 
-    public StockDataService(StockDataRepository repository, CsvParserUtil csvParserUtil){
+    public StockDataService(StockDataRepository repository, CsvParserUtil csvParserUtil, UploadedFileRepository uploadedFileRepository){
 
         this.repository=repository;
         this.csvParserUtil=csvParserUtil;
 
+        this.uploadedFileRepository=uploadedFileRepository;
     }
 
     //Bulk upload
+    @Transactional
     public BulkUploadResponseDto uploadBulkData(MultipartFile file){
 
-        if (file.isEmpty()){
+        if (file == null && file.isEmpty()){
             throw new BadRequestException("Uploaded file is empty");
+        }
+        String fileHash= FileHashUtil.generateHash(file);
+        if (uploadedFileRepository.existsByFileHash(fileHash)){
+            throw new BadRequestException("This CSV file was already uploaded. Duplicate upload is not allowed");
         }
         List<StockData> records;
         try{
@@ -50,33 +61,18 @@ public class StockDataService {
         }
 
 
-        Set<String> csvKeys= new HashSet<>();
-        for (StockData r : records){
-            csvKeys.add(r.getStock() + "_" + r.getDate());
-        }
-
-        String stock= records.get(0).getStock();
-        List<StockData> dbRecords=repository.findByStock(stock);
-
-        Set<String> dbKeys=new HashSet<>();
-        for (StockData r : dbRecords){
-            dbKeys.add(r.getStock() + "_" + r.getDate());
-        }
-        if (!dbKeys.isEmpty() && csvKeys.equals(dbKeys)) {
-
-                throw new BadRequestException("Sorry, this CSV file was already uploaded. Duplicate upload is not allowed");
-            }
-
-
         int inserted=0;
         int updated=0;
         int alreadyExists=0;
         int deleted=0;
 
+        Set<String> csvKeys= new HashSet<>();
+        for (StockData r : records){
+            String key=r.getStock() + "_" + r.getDate();
+            csvKeys.add(key);
 
-        for(StockData stockData : records) {
+            String result=upsertStockData(r);
 
-            String result = upsertStockData(stockData);
             if ("INSERTED".equals(result)) {
                 inserted++;
             } else if ("UPDATED".equals(result)) {
@@ -86,6 +82,9 @@ public class StockDataService {
             }
         }
 
+
+        String stock= records.get(0).getStock();
+        List<StockData> dbRecords=repository.findByStock(stock);
         for (StockData dbData : dbRecords){
             String dbKey = dbData.getStock() + "_" + dbData.getDate();
             if (!csvKeys.contains(dbKey)){
@@ -93,6 +92,10 @@ public class StockDataService {
                 deleted++;
             }
         }
+
+        UploadedFile uploadedFile=new UploadedFile();
+        uploadedFile.setFileHash(fileHash);
+        uploadedFileRepository.save(uploadedFile);
 
         BulkUploadResponseDto response=new BulkUploadResponseDto();
         response.setTotalRecords(records.size());
