@@ -4,7 +4,7 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.models.examples.Example;
+
 
 @Schema(description = "Reqest DTO for adding or updating stock data")
 public class StockDataRequestDto {
