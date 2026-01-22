@@ -57,10 +57,12 @@ public class StockDataController {
     @PostMapping(value = "/add",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StockDataResponseDto> addStockData(@Valid @RequestBody StockDataRequestDto requestDto){
+    public ResponseEntity<CommonResponse<StockDataResponseDto>> addStockData(@Valid @RequestBody StockDataRequestDto requestDto){
 
         StockDataResponseDto saved= stockDataService.addRecord(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+
+        CommonResponse<StockDataResponseDto> response=new CommonResponse<>("Stock data added successfully", saved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Update stock data by ID")

@@ -196,6 +196,10 @@ public class StockDataService {
 
     public StockDataResponseDto addRecord(StockDataRequestDto requestDto){
 
+
+        if (repository.findByStockAndDate(requestDto.getStock(), requestDto.getDate()).isPresent()){
+            throw new BadRequestException("Stock data already exists for given stock and date");
+        }
         StockData entity=StockDataMapper.toEntity(requestDto);
         StockData saved=repository.save(entity);
         return StockDataMapper.toResponseDto(saved);
