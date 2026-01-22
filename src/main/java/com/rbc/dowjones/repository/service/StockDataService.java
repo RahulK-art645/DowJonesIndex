@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StockDataService {
@@ -48,22 +49,26 @@ public class StockDataService {
             throw new BadRequestException("No records found in CSV file");
         }
 
+        String stock=records.get(0).getStock();
+        Set<String> csvKeys=records.stream().map(r->r.getStock() + "_" + r.getDate())
+                .collect(Collectors.toSet());
+
+        Set<String> dbKeys=repository.findByStock(stock).stream().map(r->r.getStock() + "_" + r.getDate()).collect(Collectors.toSet());
+        if (csvKeys.equals(dbKeys)){
+            throw new BadRequestException("Sorry, this CSV file was already uploaded. Duplicate upload is not allowed.");
+        }
+
         int inserted=0;
         int updated=0;
         int alreadyExists=0;
         int deleted=0;
 
-        Set<String> csvKeys=new HashSet<>();
 
         for(StockData stockData : records){
-
-            String key=stockData.getStock() + "_" + stockData.getDate();
-            csvKeys.add(key);
 
             String result = upsertStockData(stockData);
 
             switch (result){
-
                 case "INSERTED" -> inserted++;
                 case "UPDATED" -> updated++;
                 case "ALREADY_EXISTS" ->alreadyExists++;
@@ -71,23 +76,16 @@ public class StockDataService {
 
         }
 
-        String stock=records.get(0).getStock();
-
         List<StockData> dbRecords=repository.findByStock(stock);
 
         for (StockData dbData : dbRecords){
             String dbKey = dbData.getStock() + "_" + dbData.getDate();
-
             if (!csvKeys.contains(dbKey)){
                 repository.delete(dbData);
                 deleted++;
             }
         }
 
-        if (inserted == 0 && updated == 0 && deleted == 0 && alreadyExists == records.size()){
-            throw new BadRequestException("Sorry..Data already exists. Duplicate CSV upload is not allowed");
-
-        }
         BulkUploadResponseDto response=new BulkUploadResponseDto();
         response.setTotalRecords(records.size());
         response.setInsertRecords(inserted);
