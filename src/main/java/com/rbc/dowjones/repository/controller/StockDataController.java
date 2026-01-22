@@ -4,6 +4,8 @@ import com.rbc.dowjones.repository.dto.BulkUploadResponseDto;
 import com.rbc.dowjones.repository.dto.StockDataRequestDto;
 import com.rbc.dowjones.repository.dto.StockDataResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
@@ -49,12 +51,15 @@ public class StockDataController {
     }
 
     /* Add Single stock record */
-    @Operation(summary = "Add single stock record",
-    description = "Adds a single stock data record",
-    operationId = "addStockData")
     @PostMapping(value = "/add",
-    consumes = MediaType.APPLICATION_JSON_VALUE,
-    produces = MediaType.APPLICATION_JSON_VALUE)
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Add single stock record",
+            operationId = "addStockData",
+    requestBody= @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true,content = @Content(
+            mediaType = "application/json", schema = @Schema(implementation = StockDataRequestDto.class)
+    )))
+
     public ResponseEntity<StockDataResponseDto> addStockData(@Valid @RequestBody StockDataRequestDto requestDto){
 
         StockDataResponseDto saved= stockDataService.addRecord(requestDto);
