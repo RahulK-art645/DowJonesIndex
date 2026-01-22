@@ -49,14 +49,24 @@ public class StockDataService {
             throw new BadRequestException("No records found in CSV file");
         }
 
-        String stock=records.get(0).getStock();
-        Set<String> csvKeys=records.stream().map(r->r.getStock() + "_" + r.getDate())
-                .collect(Collectors.toSet());
 
-        Set<String> dbKeys=repository.findByStock(stock).stream().map(r->r.getStock() + "_" + r.getDate()).collect(Collectors.toSet());
-        if (csvKeys.equals(dbKeys)){
-            throw new BadRequestException("Sorry, this CSV file was already uploaded. Duplicate upload is not allowed.");
+        Set<String> csvKeys= new HashSet<>();
+        for (StockData r : records){
+            csvKeys.add(r.getStock() + "_" + r.getDate());
         }
+
+        String stock= records.get(0).getStock();
+        List<StockData> dbRecords=repository.findByStock(stock);
+
+        Set<String> dbKeys=new HashSet<>();
+        for (StockData r : dbRecords){
+            dbKeys.add(r.getStock() + "_" + r.getDate());
+        }
+        if (!dbKeys.isEmpty() && csvKeys.equals(dbKeys)) {
+
+                throw new BadRequestException("Sorry, this CSV file was already uploaded. Duplicate upload is not allowed");
+            }
+
 
         int inserted=0;
         int updated=0;
@@ -64,19 +74,17 @@ public class StockDataService {
         int deleted=0;
 
 
-        for(StockData stockData : records){
+        for(StockData stockData : records) {
 
             String result = upsertStockData(stockData);
-
-            switch (result){
-                case "INSERTED" -> inserted++;
-                case "UPDATED" -> updated++;
-                case "ALREADY_EXISTS" ->alreadyExists++;
+            if ("INSERTED".equals(result)) {
+                inserted++;
+            } else if ("UPDATED".equals(result)) {
+                updated++;
+            } else if ("ALREADY_EXISTS".equals(result)) {
+                alreadyExists++;
             }
-
         }
-
-        List<StockData> dbRecords=repository.findByStock(stock);
 
         for (StockData dbData : dbRecords){
             String dbKey = dbData.getStock() + "_" + dbData.getDate();
