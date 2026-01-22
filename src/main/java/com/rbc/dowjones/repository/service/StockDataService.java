@@ -83,6 +83,11 @@ public class StockDataService {
                 deleted++;
             }
         }
+
+        if (inserted == 0 && updated == 0 && deleted == 0 && alreadyExists == records.size()){
+            throw new BadRequestException("Sorry..Data already exists. Duplicate CSV upload is not allowed");
+
+        }
         BulkUploadResponseDto response=new BulkUploadResponseDto();
         response.setTotalRecords(records.size());
         response.setInsertRecords(inserted);
