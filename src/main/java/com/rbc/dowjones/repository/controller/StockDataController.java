@@ -46,10 +46,11 @@ public class StockDataController {
    /*Get data by Stock Ticker */
     @Operation(summary = "Get stock data by stock ticker")
     @GetMapping("/{stock}")
-    public ResponseEntity<List<StockDataResponseDto>> getByStock(@PathVariable @Pattern(regexp = "^[A-Z]{1,10}$",message = "Invalid stock symbol") String stock){
+    public ResponseEntity<CommonResponse<List<StockDataResponseDto>>> getByStock(@PathVariable @Pattern(regexp = "^[A-Z]{1,10}$",message = "Invalid stock symbol") String stock){
 
         List<StockDataResponseDto> responseDtos= stockDataService.getByStock(stock);
-        return ResponseEntity.ok(responseDtos);
+        CommonResponse<List<StockDataResponseDto>> response=new CommonResponse<>("Stock data fetched successfully for ticker: "+stock,responseDtos);
+        return ResponseEntity.ok(response);
     }
 
     /* Add Single stock record */
