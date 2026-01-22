@@ -9,7 +9,7 @@ public class ErrorResponseDto {
     private int status;
     private LocalDateTime timestamp;
 
-    public ErrorResponseDto(String message, int status){
+    public ErrorResponseDto(String message, int status, LocalDateTime timestamp){
         this.message=message;
         this.status=status;
         this.timestamp=LocalDateTime.now();
