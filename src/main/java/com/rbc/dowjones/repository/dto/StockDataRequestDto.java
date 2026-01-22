@@ -55,7 +55,7 @@ public class StockDataRequestDto {
     private BigDecimal percentChangePrice;
 
     @Schema(example = "5.60", description ="Percent change volume over last week")
-    @DecimalMin(value = "=100.00", message = "Percent change volume can not be less than -100")
+    @DecimalMin(value = "-100.00", message = "Percent change volume can not be less than -100")
     private BigDecimal percentChangeVolumeOverLastWk;
 
     @Schema(example = "900000", description = "Previous week's volume")
