@@ -57,7 +57,7 @@ public class StockDataService {
 
         for(StockData stockData : records){
 
-            String key=stockData.getStock() + "_" + stockData.getDate() + "_" +stockData.getQuarter();
+            String key=stockData.getStock() + "_" + stockData.getDate();
             csvKeys.add(key);
 
             String result = upsertStockData(stockData);
@@ -76,7 +76,7 @@ public class StockDataService {
         List<StockData> dbRecords=repository.findByStock(stock);
 
         for (StockData dbData : dbRecords){
-            String dbKey = dbData.getStock() + "_" + dbData.getDate() + "_" +dbData.getQuarter();
+            String dbKey = dbData.getStock() + "_" + dbData.getDate();
 
             if (!csvKeys.contains(dbKey)){
                 repository.delete(dbData);
@@ -99,7 +99,7 @@ public class StockDataService {
     public String upsertStockData(StockData stockData){
 
         //Null check
-        if (stockData.getStock() == null || stockData.getDate() == null || stockData.getQuarter()==null){
+        if (stockData.getStock() == null || stockData.getDate() == null){
             throw new BadRequestException("Stock, date, and quarter must not be null");
         }
 
