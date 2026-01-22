@@ -197,8 +197,11 @@ public class StockDataService {
         StockData dbData=repository.findById(id).orElseThrow(()->new ResourceNotFoundException("Stock data not found"));
 
         //Unique field should not change
-        if (!dbData.getStock().equals(requestDto.getDate())){
-            throw new BadRequestException("Stock and date can not be updated");
+        if (!dbData.getStock().equals(requestDto.getStock())){
+            throw new BadRequestException("Stock can not be updated");
+        }
+        if(!dbData.getDate().equals(requestDto.getDate())){
+            throw new BadRequestException("Date can not be updated");
         }
         if (requestDto.getOpen().compareTo(BigDecimal.ZERO) <=0 || requestDto.getClose().compareTo(BigDecimal.ZERO) <=0 ||requestDto.getHigh().compareTo(BigDecimal.ZERO) <=0 ||
 
