@@ -37,7 +37,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponseDto> handleTypeMismatch(MethodArgumentTypeMismatchException exception){
 
-        String message="Sorry,character are not allowed here. ID must be a number";
+        String message;
+        if ("id".equals(exception.getName())){
+            message="Sorry, character are not allowed here. ID must be a number";
+        } else {
+            message="Invalid request parameter";
+        }
         ErrorResponseDto error=new ErrorResponseDto(message,HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
         return ResponseEntity.badRequest().body(error);
 
