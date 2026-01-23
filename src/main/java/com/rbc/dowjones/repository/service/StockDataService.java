@@ -235,7 +235,7 @@ public class StockDataService {
         }
         //Fetch existing
         StockData dbData=repository.findById(stockId).orElseThrow(()->
-                new ResourceNotFoundException("Stock data not found"));
+                new ResourceNotFoundException("Sorry, Stock data is not available on this given ID"));
 
         //Unique field should not change
         if (!dbData.getStock().equals(requestDto.getStock())){
