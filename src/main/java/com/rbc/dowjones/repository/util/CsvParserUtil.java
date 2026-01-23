@@ -47,7 +47,7 @@ public class CsvParserUtil {
                 }
 
                 if (!stock.matches("^[A-Z]+$")){
-                    throw new CsvProcessingException("Invalid stock ticker (only uppercase allowed) at line"+linenumber);
+                    throw new CsvProcessingException("Invalid stock ticker (only uppercase allowed), Number not allowed at line"+linenumber);
                 }
                 data.setStock(stock);
 
