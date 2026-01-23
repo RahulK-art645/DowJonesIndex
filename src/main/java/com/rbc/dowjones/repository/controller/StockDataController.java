@@ -88,11 +88,12 @@ public class StockDataController {
 
     @GetMapping("/id{id}")
     @Operation(summary = "Get Stock Data By ID")
-    public ResponseEntity<CommonResponse<StockDataResponseDto>> getStockDataById(@PathVariable Long id){
+    public ResponseEntity<CommonResponse<StockDataResponseDto>> getStockDataById(@PathVariable String id){
 
         StockDataResponseDto response= stockDataService.getById(id);
 
-         CommonResponse<StockDataResponseDto> response1= new CommonResponse<>("Stock data fetched successfully based on ID", response);
+         CommonResponse<StockDataResponseDto> response1= new CommonResponse<>
+                 ("Stock data fetched successfully based on ID", response);
 
         return ResponseEntity.ok(response1);
 

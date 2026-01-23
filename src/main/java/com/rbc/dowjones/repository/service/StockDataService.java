@@ -260,12 +260,20 @@ public class StockDataService {
         repository.deleteById(id);
     }
 
-    public StockDataResponseDto getById(Long id){
+    public StockDataResponseDto getById(String id){
 
-        if (id == null || id <=0){
+        Long stockId;
+
+        try{
+            stockId=Long.parseLong(id);
+        }catch (NumberFormatException ex){
+            throw new BadRequestException("Sorry, character are not allowed here. Please enter a valid number");
+        }
+        if (stockId <=0){
             throw new BadRequestException("Invalid id format");
         }
-        StockData data=repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Stock data not found"));
+        StockData data=repository.findById(stockId).orElseThrow(()->
+                new ResourceNotFoundException("Stock data not found"));
 
       return  StockDataMapper.toResponseDto(data);
 
