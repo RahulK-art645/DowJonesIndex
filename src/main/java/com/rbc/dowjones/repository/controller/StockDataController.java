@@ -68,7 +68,7 @@ public class StockDataController {
 
     @Operation(summary = "Update stock data by ID")
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<StockDataResponseDto>> updateStockData(@PathVariable Long id, @Valid @RequestBody StockDataRequestDto requestDto){
+    public ResponseEntity<CommonResponse<StockDataResponseDto>> updateStockData(@PathVariable String id, @Valid @RequestBody StockDataRequestDto requestDto){
 
         StockDataResponseDto updated=stockDataService.updateById(id, requestDto);
 

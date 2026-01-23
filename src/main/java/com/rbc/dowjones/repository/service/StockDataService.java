@@ -210,21 +210,32 @@ public class StockDataService {
     }
 
     /* Update by ID */
-    public StockDataResponseDto updateById(Long id,StockDataRequestDto requestDto){
+    public StockDataResponseDto updateById(String  id,StockDataRequestDto requestDto){
 
-        if (id == null || id <=0){
+        Long stockId;
+        try{
+            stockId=Long.parseLong(id);
+        }catch (NumberFormatException ex){
+            throw new BadRequestException("Sorry, character are not allowed here. Please enter a valid number");
+        }
+        if (stockId <=0){
             throw new BadRequestException("Invalid ID");
         }
-        StockData dbData=repository.findById(id).orElseThrow(()->new ResourceNotFoundException("Stock data not found"));
+        //Fetch existing
+        StockData dbData=repository.findById(stockId).orElseThrow(()->
+                new ResourceNotFoundException("Stock data not found"));
 
         //Unique field should not change
         if (!dbData.getStock().equals(requestDto.getStock())){
-            throw new BadRequestException("Stock can not be updated");
+            throw new BadRequestException("Stock field is immutable and cannot be changed");
         }
         if(!dbData.getDate().equals(requestDto.getDate())){
-            throw new BadRequestException("Date can not be updated");
+            throw new BadRequestException("Date field is immutable and cannot be changed");
         }
-        if (requestDto.getOpen().compareTo(BigDecimal.ZERO) <=0 || requestDto.getClose().compareTo(BigDecimal.ZERO) <=0 ||requestDto.getHigh().compareTo(BigDecimal.ZERO) <=0 ||
+        // price validation
+        if (requestDto.getOpen().compareTo(BigDecimal.ZERO) <=0 || requestDto.getClose()
+                .compareTo(BigDecimal.ZERO) <=0 ||requestDto.getHigh().
+                compareTo(BigDecimal.ZERO) <=0 ||
 
         requestDto.getLow().compareTo(BigDecimal.ZERO) <=0){
 

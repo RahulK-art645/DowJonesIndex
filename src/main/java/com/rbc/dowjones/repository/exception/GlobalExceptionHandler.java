@@ -15,7 +15,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponseDto> handleBadRequest(BadRequestException ex) {
         return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
-                ErrorResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now()));
+                ErrorResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now()));
 
     }
 
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponseDto("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value(), LocalDateTime.now()));
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    /*@ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponseDto> handleTypeMismatch(MethodArgumentTypeMismatchException exception){
 
         String message;
@@ -46,5 +47,5 @@ public class GlobalExceptionHandler {
         ErrorResponseDto error=new ErrorResponseDto(message,HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
         return ResponseEntity.badRequest().body(error);
 
-    }
+    }*/
 }
