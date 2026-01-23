@@ -1,4 +1,5 @@
 package com.rbc.dowjones.repository.exception;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import com.rbc.dowjones.repository.dto.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
@@ -48,4 +49,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
 
     }*/
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDto> handleValidationErros(MethodArgumentNotValidException ex){
+        String message=ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+
+        ErrorResponseDto error=new ErrorResponseDto(message,HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
+
+        return ResponseEntity.badRequest().body(error);
+    }
 }
