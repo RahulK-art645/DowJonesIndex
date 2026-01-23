@@ -16,7 +16,7 @@ public class FileHashUtil {
 
             return Base64.getEncoder().encodeToString(hash);
         }catch(Exception e){
-            throw new RuntimeException("Unable to generate file hash");
+            throw new RuntimeException("Unable to generate file hash",e);
 
         }
     }

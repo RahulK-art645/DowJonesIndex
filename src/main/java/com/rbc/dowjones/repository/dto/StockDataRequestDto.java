@@ -68,6 +68,7 @@ public class StockDataRequestDto {
 
 
 
+    @NotNull(message = "Days to Next dividend must be required")
     @PositiveOrZero(message = "Days to next dividend must be zero or positive")
     private Integer daysToNextDividend;
 

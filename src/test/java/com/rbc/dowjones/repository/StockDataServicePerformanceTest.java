@@ -34,12 +34,12 @@ public class StockDataServicePerformanceTest {
         BulkUploadResponseDto response = stockDataService.uploadBulkData(file);
 
         long endTime = System.currentTimeMillis();
-        long executionTime = endTime - startTime;
+        long executionTime = endTime-startTime;
 
         // Assert: Functional + Performance checks
         assertNotNull(response);
         assertTrue(response.getTotalRecords() >= 49);
-        assertTrue(executionTime < 5000); // SLA: 5 seconds
+        assertTrue(executionTime < 5000, "Bulk upload exceeded SLA. Time taken:"+ executionTime + "ms"); // SLA: 5 seconds
 
         // Log result
         System.out.println("Bulk upload of " + response.getTotalRecords() + " records completed in " + executionTime + " ms"

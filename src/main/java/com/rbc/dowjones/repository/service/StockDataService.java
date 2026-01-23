@@ -42,7 +42,7 @@ public class StockDataService {
     @Transactional
     public BulkUploadResponseDto uploadBulkData(MultipartFile file){
 
-        if (file == null && file.isEmpty()){
+        if (file == null || file.isEmpty()){
             throw new BadRequestException("Uploaded file is empty");
         }
         String fileHash= FileHashUtil.generateHash(file);
@@ -112,6 +112,9 @@ public class StockDataService {
 
     public String upsertStockData(StockData stockData){
 
+        if(!stockData.getStock().matches("^[A-Z]+$")){
+            throw new BadRequestException("Stock ticket must be in uppercase only.");
+        }
         //Null check
         if (stockData.getStock() == null || stockData.getDate() == null){
             throw new BadRequestException("Stock, date, and quarter must not be null");
@@ -124,13 +127,16 @@ public class StockDataService {
         }
 
         //price validation
-        if (stockData.getOpen().compareTo(BigDecimal.ZERO) <=0  || stockData.getClose().compareTo(BigDecimal.ZERO) <=0 || stockData.getHigh().compareTo(BigDecimal.ZERO) <=0 ||
-        stockData.getLow().compareTo(BigDecimal.ZERO) <=0){
+        if (stockData.getOpen() == null  ||
+                stockData.getClose() == null ||
+                stockData.getHigh() == null ||
+        stockData.getLow() == null){
 
-            throw new BadRequestException("Price values must be greater than zero");
+            throw new BadRequestException("Price field must not be null");
         }
 
-        Optional<StockData> existing=repository.findByStockAndDate(stockData.getStock(),stockData.getDate());
+        Optional<StockData> existing=repository.findByStockAndDate(stockData.getStock(),
+                stockData.getDate());
 
 
         if(existing.isPresent()) {
@@ -190,6 +196,12 @@ public class StockDataService {
 
     public List<StockDataResponseDto> getByStock(String stock){
 
+        if (stock == null || stock.isBlank()){
+            throw new BadRequestException("Please enter stock ticker");
+        }
+        if(!stock.matches("[A-Z]+$")){
+            throw new BadRequestException("Stock ticker must be uppercase");
+        }
         List<StockData> entities=repository.findByStock(stock);
         if (entities.isEmpty()){
             throw new ResourceNotFoundException("Stock not found for ticker :"+ stock);

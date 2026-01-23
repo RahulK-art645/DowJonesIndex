@@ -9,7 +9,7 @@ public class StockDataMapper {
     public static StockDataResponseDto toResponseDto(StockData entity) {
 
         if(entity==null){
-            return null;
+            throw new IllegalArgumentException("StockData entity cannot be null");
         }
         StockDataResponseDto dto = new StockDataResponseDto();
 

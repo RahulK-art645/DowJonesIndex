@@ -45,12 +45,12 @@ public class StockDataServiceTest {
         StockData savedEntity = new StockData();
         savedEntity.setId(1L);
         savedEntity.setStock("DIS");
-        when(repository.save(any())).thenReturn(savedEntity);
+        when(repository.save(any(StockData.class))).thenReturn(savedEntity);
 
         StockDataResponseDto saved=service.addRecord(requestDto);
 
         assertNotNull(saved);
-        verify(repository).save(any());
+        verify(repository, times(1)).save(any(StockData.class));
 
     }
 
@@ -65,7 +65,7 @@ public class StockDataServiceTest {
 
         when(repository.findById(1L)).thenReturn(Optional.of(existing));
 
-        when(repository.save(any())).thenReturn(existing);
+        when(repository.save(any(StockData.class))).thenReturn(existing);
 
         StockDataRequestDto requestDto = new StockDataRequestDto();
         requestDto.setStock("AAPL");
@@ -75,11 +75,11 @@ public class StockDataServiceTest {
         requestDto.setClose(BigDecimal.valueOf(22));
         requestDto.setLow(BigDecimal.valueOf(18));
 
-        StockDataResponseDto updated= service.updateById(1L, requestDto);
+        StockDataResponseDto updated= service.updateById("1", requestDto);
 
         assertNotNull(updated);
 
-        verify(repository).save(any());
+        verify(repository, times(1)).save(any(StockData.class));
 
     }
 

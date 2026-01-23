@@ -48,7 +48,9 @@ public class StockDataController {
     @Operation(summary = "Get stock data by stock ticker")
     @GetMapping("/{stock}")
     public ResponseEntity<CommonResponse<List<StockDataResponseDto>>> getByStock(
-            @PathVariable @NotBlank(message = "Sorry, ticker cannot be blank") @Pattern(regexp =
+            @PathVariable
+            @NotBlank(message = "Sorry, ticker cannot be blank")
+            @Pattern(regexp =
             "^[A-Z0-9]{1,10}$",message = "Invalid stock symbol. Only Uppercase letters allowed") String stock){
 
         List<StockDataResponseDto> responseDtos= stockDataService.getByStock(stock);
@@ -63,21 +65,25 @@ public class StockDataController {
     @PostMapping(value = "/add",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommonResponse<StockDataResponseDto>> addStockData(@Valid @RequestBody StockDataRequestDto requestDto){
+    public ResponseEntity<CommonResponse<StockDataResponseDto>>
+    addStockData(@Valid @RequestBody StockDataRequestDto requestDto){
 
         StockDataResponseDto saved= stockDataService.addRecord(requestDto);
 
-        CommonResponse<StockDataResponseDto> response=new CommonResponse<>("Stock data added successfully", saved);
+        CommonResponse<StockDataResponseDto> response=new
+                CommonResponse<>("Stock data added successfully", saved);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Update stock data by ID")
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<StockDataResponseDto>> updateStockData(@PathVariable String id, @Valid @RequestBody StockDataRequestDto requestDto){
+    public ResponseEntity<CommonResponse<StockDataResponseDto>>
+    updateStockData(@PathVariable String id, @Valid @RequestBody StockDataRequestDto requestDto){
 
         StockDataResponseDto updated=stockDataService.updateById(id, requestDto);
 
-        CommonResponse<StockDataResponseDto> response=new CommonResponse<>("Stock data updated successfully based on ID.", updated);
+        CommonResponse<StockDataResponseDto> response=new
+                CommonResponse<>("Stock data updated successfully based on ID.", updated);
         return ResponseEntity.ok(response);
     }
 

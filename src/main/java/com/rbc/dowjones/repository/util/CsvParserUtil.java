@@ -1,5 +1,6 @@
 package com.rbc.dowjones.repository.util;
 
+import com.rbc.dowjones.repository.exception.CsvProcessingException;
 import com.rbc.dowjones.repository.model.StockData;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,24 +21,36 @@ public class CsvParserUtil {
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))){
 
             String line;
+            int linenumber=1;
 
             reader.readLine();
 
             while((line=reader.readLine()) != null){
 
+                linenumber++;
                 if (line.trim().isEmpty()){
                     continue; // skip emty lines
                 }
                 String[] columns= line.split(",", -1);
 
                 if(columns.length < 16){
-                    continue; // skip Invalid/ incomplete
+                    throw new CsvProcessingException("Invalida column count at line"+linenumber);// skip Invalid/ incomplete
                 }
 
                 StockData data= new StockData();
 
+
                 data.setQuarter(parseNullableInt(columns[0]));
-                data.setStock(columns[1]);
+                String stock=columns[1].trim();
+                if (stock.isEmpty()){
+                    throw new CsvProcessingException("Stock ticker is missing at line"+ linenumber);
+                }
+
+                if (!stock.matches("^[A-Z]+$")){
+                    throw new CsvProcessingException("Invalid stock ticker (only uppercase allowed) at line"+linenumber);
+                }
+                data.setStock(stock);
+
                 data.setDate(LocalDate.parse(columns[2]));
 
                 data.setOpen(parseNullableBigDecimal(columns[3]));

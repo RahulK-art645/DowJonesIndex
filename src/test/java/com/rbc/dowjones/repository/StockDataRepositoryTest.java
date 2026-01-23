@@ -23,11 +23,11 @@ public class StockDataRepositoryTest {
 
         StockData data=new StockData();
         data.setStock("CSCO");
-        data.setDate(LocalDate.now());
-        data.setOpen(BigDecimal.valueOf(10.0));
-        data.setHigh(BigDecimal.valueOf(13.0));
-        data.setLow(BigDecimal.valueOf(9.0));
-        data.setClose(BigDecimal.valueOf(11.0));
+        data.setDate(LocalDate.of(2020, 1, 1));
+        data.setOpen(BigDecimal.valueOf(10));
+        data.setHigh(BigDecimal.valueOf(13));
+        data.setLow(BigDecimal.valueOf(9));
+        data.setClose(BigDecimal.valueOf(11));
         data.setVolume(1000L);
 
         repository.save(data);
