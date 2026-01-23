@@ -10,10 +10,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class StockDataRequestDto {
 
 
-    @Schema(example = "1", description = "Financial quarter (1 to 5)", allowableValues = {"1","2","3", "4", "5"})
+
     @NotNull(message = "Quarter is mandatory")
-    @Min(value=1,message = "Quarter must be between 1 to 5")
-    @Max(value = 5, message = "Quarter must be between 1 to 5")
+    @Min(value=1,message = "Quarter must be between 1 to 4")
+    @Max(value = 4, message = "Quarter must be between 1 to 4")
     private Integer quarter;
 
     @Schema(example = "AAPL", description = "Stock ticker symbol (1 to 10 uppercase letters)")
