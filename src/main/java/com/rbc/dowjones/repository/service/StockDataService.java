@@ -292,5 +292,13 @@ public class StockDataService {
 
     }
 
+    public List<StockDataResponseDto> getAllStocks() {
+
+        List<StockData> entities=repository.findAll();
+        if (entities.isEmpty()){
+            throw new ResourceNotFoundException("No stock data found");
+        }
+        return entities.stream().map(StockDataMapper::toResponseDto).toList();
+    }
 }
 

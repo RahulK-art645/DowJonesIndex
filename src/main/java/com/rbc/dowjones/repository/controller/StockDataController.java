@@ -96,6 +96,18 @@ public class StockDataController {
 
     }
 
+    @Operation(summary = "Get all stock data")
+    @GetMapping("/all")
+    public ResponseEntity<CommonResponse<List<StockDataResponseDto>>> getAllStocks(){
+        List<StockDataResponseDto> responseDtos=stockDataService.getAllStocks();
+
+        CommonResponse<List<StockDataResponseDto>> response=new CommonResponse<>("All stock data fetched successfully..", responseDtos);
+
+        return ResponseEntity.ok(response);
+
+
+    }
+
     @GetMapping("/id{id}")
     @Operation(summary = "Get Stock Data By ID")
     public ResponseEntity<CommonResponse<StockDataResponseDto>> getStockDataById(@PathVariable String id){
