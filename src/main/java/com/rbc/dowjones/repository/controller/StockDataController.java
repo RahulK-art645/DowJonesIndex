@@ -51,7 +51,7 @@ public class StockDataController {
             @PathVariable
             @NotBlank(message = "Sorry, ticker cannot be blank")
             @Pattern(regexp =
-            "^[A-Z0-9]{1,10}$",message = "Invalid stock symbol. Only Uppercase letters allowed") String stock){
+            "^[A-Z]{1,10}$",message = "Sorry, lower case not allowed here") String stock){
 
         List<StockDataResponseDto> responseDtos= stockDataService.getByStock(stock);
         CommonResponse<List<StockDataResponseDto>> response=
