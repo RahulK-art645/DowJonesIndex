@@ -17,6 +17,14 @@ public class ErrorResponseDto {
         this.timestamp=LocalDateTime.now();
     }
 
+    public ErrorResponseDto(String message, int status, LocalDateTime timestamp, Map<String, String> errors){
+
+        this.message=message;
+        this.status=status;
+        this.timestamp=timestamp;
+        this.errors=errors;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -48,4 +56,5 @@ public class ErrorResponseDto {
     public void setErrors(Map<String, String> errors) {
         this.errors = errors;
     }
+
 }

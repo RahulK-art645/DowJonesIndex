@@ -1,4 +1,5 @@
 package com.rbc.dowjones.repository.exception;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.rbc.dowjones.repository.dto.ErrorResponseDto;
@@ -33,10 +34,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ErrorResponseDto(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY.value(), LocalDateTime.now()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDto> handleGeneric(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponseDto("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value(), LocalDateTime.now()));
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDto> handleJsonError(HttpMessageNotReadableException ex){
+        return ResponseEntity.badRequest().body(new ErrorResponseDto("Invalid request body. Please check required fields and data type", HttpStatus.BAD_REQUEST.value(),LocalDateTime.now()));
+
     }
+
+
 
     /*@ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponseDto> handleTypeMismatch(MethodArgumentTypeMismatchException exception){
@@ -55,6 +59,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleValidationErrors
             (MethodArgumentNotValidException ex){
+
         Map<String, String> errors= new LinkedHashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error->{
                 errors.put(error.getField(), error.getDefaultMessage());
@@ -62,7 +67,15 @@ public class GlobalExceptionHandler {
 
         ErrorResponseDto response=new ErrorResponseDto("Validation failed",HttpStatus.BAD_REQUEST.value(),
                 LocalDateTime.now());
+        response.setErrors(errors);
 
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleGeneric(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new
+                ErrorResponseDto("Internal server error",
+                HttpStatus.INTERNAL_SERVER_ERROR.value(), LocalDateTime.now()));
     }
 }
