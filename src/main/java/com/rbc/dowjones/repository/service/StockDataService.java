@@ -192,7 +192,7 @@ public class StockDataService {
 
         List<StockData> entities=repository.findByStock(stock);
         if (entities.isEmpty()){
-            throw new BadRequestException("Sorry, stock is not available.");
+            throw new ResourceNotFoundException("Stock not found for ticker"+ stock);
         }
         return entities.stream().map(StockDataMapper::toResponseDto).toList();
     }
