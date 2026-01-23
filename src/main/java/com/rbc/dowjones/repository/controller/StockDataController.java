@@ -49,7 +49,7 @@ public class StockDataController {
     @GetMapping("/{stock}")
     public ResponseEntity<CommonResponse<List<StockDataResponseDto>>> getByStock(
             @PathVariable @NotBlank(message = "Sorry, ticker cannot be blank") @Pattern(regexp =
-            "^[A-Z]{1,10}$",message = "Invalid stock symbol. Only Uppercase letters allowed") String stock){
+            "^[A-Z0-9]{1,10}$",message = "Invalid stock symbol. Only Uppercase letters allowed") String stock){
 
         List<StockDataResponseDto> responseDtos= stockDataService.getByStock(stock);
         CommonResponse<List<StockDataResponseDto>> response=
