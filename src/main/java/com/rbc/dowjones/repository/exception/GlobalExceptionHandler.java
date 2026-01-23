@@ -1,14 +1,16 @@
 package com.rbc.dowjones.repository.exception;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import com.rbc.dowjones.repository.dto.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -51,11 +53,16 @@ public class GlobalExceptionHandler {
     }*/
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDto> handleValidationErrors(MethodArgumentNotValidException ex){
-        String message=ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+    public ResponseEntity<ErrorResponseDto> handleValidationErrors
+            (MethodArgumentNotValidException ex){
+        Map<String, String> errors= new LinkedHashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error->{
+                errors.put(error.getField(), error.getDefaultMessage());
+        });
 
-        ErrorResponseDto error=new ErrorResponseDto(message,HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
+        ErrorResponseDto response=new ErrorResponseDto("Validation failed",HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now());
 
-        return ResponseEntity.badRequest().body(error);
+        return ResponseEntity.badRequest().body(response);
     }
 }

@@ -2,12 +2,14 @@ package com.rbc.dowjones.repository.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class ErrorResponseDto {
 
     private String message;
     private int status;
     private LocalDateTime timestamp;
+    private Map<String, String> errors;
 
     public ErrorResponseDto(String message, int status, LocalDateTime timestamp){
         this.message=message;
@@ -37,5 +39,13 @@ public class ErrorResponseDto {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Map<String, String> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(Map<String, String> errors) {
+        this.errors = errors;
     }
 }
