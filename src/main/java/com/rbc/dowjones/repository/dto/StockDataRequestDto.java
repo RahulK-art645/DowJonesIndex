@@ -21,22 +21,22 @@ public class StockDataRequestDto {
     @Pattern(regexp = "^[A-Z]{1,10}$",message = "Stock must be 1 to 10 uppercase letters")
     private String stock;
 
-    @Schema(example = "2024-01-01", description = "Trading date")
+
     @NotNull(message = "Date is mandatory")
     @PastOrPresent(message = "Date can not be in the future")
     private LocalDate date;
 
-    @Schema(example = "130.75", description = "Opening price")
+
     @NotNull(message = "Open price is mandatory")
     @DecimalMin(value = "0.01", inclusive = true, message = "Opne price must be greater that zero")
     private BigDecimal open;
 
-    @Schema(example = "130.75", description = "Lowest price")
+
     @NotNull(message = "High price is mandatory")
     @DecimalMin(value = "0.01", inclusive = true, message = "High price must be greater than zero")
     private BigDecimal high;
 
-    @Schema(example = "115.25", description = "Lowest price")
+
     @NotNull(message = "Low price is mandatory")
     @DecimalMin(value = "0.01",inclusive = true, message = "Low price must be greater than zero")
     private BigDecimal low;
