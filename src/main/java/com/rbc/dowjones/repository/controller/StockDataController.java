@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -46,10 +47,14 @@ public class StockDataController {
    /*Get data by Stock Ticker */
     @Operation(summary = "Get stock data by stock ticker")
     @GetMapping("/{stock}")
-    public ResponseEntity<CommonResponse<List<StockDataResponseDto>>> getByStock(@PathVariable @Pattern(regexp = "^[A-Z]{1,10}$",message = "Invalid stock symbol") String stock){
+    public ResponseEntity<CommonResponse<List<StockDataResponseDto>>> getByStock(
+            @PathVariable @NotBlank(message = "Sorry, ticker cannot be blank") @Pattern(regexp =
+            "^[A-Z]{1,10}$",message = "Invalid stock symbol. Only Uppercase letters allowed") String stock){
 
         List<StockDataResponseDto> responseDtos= stockDataService.getByStock(stock);
-        CommonResponse<List<StockDataResponseDto>> response=new CommonResponse<>("Stock data fetched successfully for ticker: "+stock,responseDtos);
+        CommonResponse<List<StockDataResponseDto>> response=
+                new CommonResponse<>("Stock data fetched successfully for ticker: "
+                        +stock,responseDtos);
         return ResponseEntity.ok(response);
     }
 

@@ -53,6 +53,7 @@ public class StockDataRequestDto {
     @DecimalMin(value = "-100.00", message = "Percent change volume can not be less than -100")
     private BigDecimal percentChangeVolumeOverLastWk;
 
+    @NotNull(message = "previous week volume must be required")
     @PositiveOrZero(message = "Previous week volume must be zero or positive")
     private Long previousWeeksVolume;
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -70,6 +71,13 @@ public class GlobalExceptionHandler {
         response.setErrors(errors);
 
         return ResponseEntity.badRequest().body(response);
+    }
+    public ResponseEntity<ErrorResponseDto> handleConstraintViolation(ConstraintViolationException ex){
+        String message=ex.getConstraintViolations().iterator().next().getMessage();
+
+        ErrorResponseDto error=new ErrorResponseDto(message,HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
+
+        return ResponseEntity.badRequest().body(error);
     }
 
     @ExceptionHandler(Exception.class)
