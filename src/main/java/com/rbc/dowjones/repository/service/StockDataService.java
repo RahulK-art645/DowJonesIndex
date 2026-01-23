@@ -196,6 +196,12 @@ public class StockDataService {
 
     public List<StockDataResponseDto> getByStock(String stock){
 
+        if (stock == null || stock.isBlank()){
+            throw new BadRequestException("Please enter stock ticker");
+        }
+        if (!stock.matches("^[A-Z]+$")){
+            throw new BadRequestException("Sorry, only uppercase letters allowed. Lowercase or numbers not allowed");
+        }
         List<StockData> entities=repository.findByStock(stock);
         if (entities.isEmpty()){
             throw new ResourceNotFoundException("Stock not found for ticker :"+ stock);

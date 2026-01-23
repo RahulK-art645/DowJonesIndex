@@ -75,7 +75,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleConstraintViolation(ConstraintViolationException ex){
         String message=ex.getConstraintViolations().iterator().next().getMessage();
 
-        ErrorResponseDto error=new ErrorResponseDto(message,HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
+        ErrorResponseDto error=new ErrorResponseDto(message,
+                HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
 
         return ResponseEntity.badRequest().body(error);
     }

@@ -49,9 +49,8 @@ public class StockDataController {
     @GetMapping("/{stock}")
     public ResponseEntity<CommonResponse<List<StockDataResponseDto>>> getByStock(
             @PathVariable
-            @NotBlank(message = "Sorry, ticker cannot be blank")
-            @Pattern(regexp =
-            "^[A-Z]+$",message = "Sorry, only uppercase letters allowed. Numbers not allowed") String stock){
+            @NotBlank(message = "Sorry, ticker cannot be blank") String stock)
+           {
 
         List<StockDataResponseDto> responseDtos= stockDataService.getByStock(stock);
         CommonResponse<List<StockDataResponseDto>> response=
