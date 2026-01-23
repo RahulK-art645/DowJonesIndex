@@ -232,7 +232,7 @@ public class StockDataService {
         if(!dbData.getDate().equals(requestDto.getDate())){
             throw new BadRequestException("Date field is immutable and cannot be changed");
         }
-        // price validation
+       /* // price validation
         if (requestDto.getOpen().compareTo(BigDecimal.ZERO) <=0 || requestDto.getClose()
                 .compareTo(BigDecimal.ZERO) <=0 ||requestDto.getHigh().
                 compareTo(BigDecimal.ZERO) <=0 ||
@@ -240,7 +240,7 @@ public class StockDataService {
         requestDto.getLow().compareTo(BigDecimal.ZERO) <=0){
 
             throw new BadRequestException("price values must be greater than zero");
-        }
+        }*/
 
         copyUpdatableField(dbData,StockDataMapper.toEntity(requestDto));
         StockData saved=repository.save(dbData);
