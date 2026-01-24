@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,10 +22,13 @@ public class CsvParserUtil {
             "quarter","stock",
             "date",
             "open","high","low","close", "volume",
-            "percentChangePrice","percentChangeVolumeOverLastWk",
-            "previousWeeksVolume","nextWeeksOpen","nextWeeksClose",
-            "percentChangeNextWeeksPrice","daysToNextDividend","percentReturnNextDividend");
-    public List<StockData> parse(MultipartFile file){
+            "percent_change_price","percent_change_volume_over_lastwk",
+            "previous_weeks_volume","next_weeks_open","next_weeks_close",
+            "percent_change_next_weeks_price","days_to_next_dividend","percent_return_next_dividend");
+   private static final DateTimeFormatter ISO_DATE= DateTimeFormatter.ISO_LOCAL_DATE;
+   private static final DateTimeFormatter SLASH_DATE=DateTimeFormatter.ofPattern("M/d/yyy");
+
+   public List<StockData> parse(MultipartFile file){
 
         List<StockData> records=new ArrayList<>();
 
@@ -39,8 +43,8 @@ public class CsvParserUtil {
 
             String[] headers=headerLine.split(",", -1);
 
-            if (headers.length < EXPECTED_COLUMNS){
-                throw  new CsvProcessingException("Invalid CSV header. Expected 16 columns");
+            if (headers.length != EXPECTED_COLUMNS){
+                throw  new CsvProcessingException("Invalid CSV header. Expected" + EXPECTED_COLUMNS +"columns");
             }
             for (int i=0; i<EXPECTED_HEADERS.size(); i++){
                 if (!headers[i].trim().equalsIgnoreCase(EXPECTED_HEADERS.get(i))){
@@ -61,7 +65,7 @@ public class CsvParserUtil {
                 }
                 String[] columns= line.split(",", -1);
 
-                if(columns.length < EXPECTED_COLUMNS){
+                if(columns.length != EXPECTED_COLUMNS){
                     throw new CsvProcessingException("Invalida column count at line"+linenumber);// skip Invalid/ incomplete
                 }
 
@@ -81,7 +85,17 @@ public class CsvParserUtil {
 
 
                 try {
-                    data.setDate(LocalDate.parse(columns[2]));
+                    String dateStr=columns[2].trim();
+                    LocalDate date;
+
+                    if (dateStr.contains("_")){
+                        date=LocalDate.parse(dateStr, ISO_DATE);
+                    } else if (dateStr.contains("/")){
+                        date=LocalDate.parse(dateStr, SLASH_DATE);
+                    } else {
+                        throw new CsvProcessingException("Invalid date format at line: "+linenumber);
+                    }
+                    data.setDate(date);
 
                 }catch (Exception e){
                     throw new CsvProcessingException("Invalid date at line"+linenumber);
@@ -172,26 +186,40 @@ public class CsvParserUtil {
 
     private BigDecimal parsePositiveBigDecimal(String v, String field, int line){
 
-        BigDecimal val=parseNullableBigDecimal(v);
-        if(val == null || val.compareTo(BigDecimal.ZERO)<=0){
-
-            throw new CsvProcessingException("Invalid" +field +"at line" +line+".Must be > 0");
-
-
+        if (v==null || v.trim().isEmpty()){
+            throw new CsvProcessingException(field + " is empty at line "+line);
         }
-        return val;
+        try{
+            BigDecimal val=new BigDecimal(v.replace("$", "").trim());
+            if (val.compareTo(BigDecimal.ZERO)<=0){
+                throw new CsvProcessingException(field +"must be >0 at line"+ line);
+            }
+            return val;
+        } catch (CsvProcessingException e){
+            throw e;
+        } catch (Exception e){
+            throw new CsvProcessingException("Invalid "+ field +"at line "+ line);
+        }
+
 
     }
 
     private Long parsePositiveLong(String v, String field, int line){
 
+        if (v==null || v.trim().isEmpty()){
+            throw new CsvProcessingException(field + " is empty at line "+line);
+        }
 
+        try{
         Long val=parseNullableLong(v);
-        if (val == null || val<=0){
-            throw new CsvProcessingException("Invalid"+field+"at line"+line+ ". Must be >0");
+        if (val <=0){
+            throw new CsvProcessingException(field+"must be >0 at line"+line);
         }
         return val;
 
+    } catch (Exception e){
+         throw new CsvProcessingException("Invalid" + field +"at line"+line);
+        }
     }
 
 }

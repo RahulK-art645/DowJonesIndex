@@ -1,4 +1,4 @@
-quarter,stock,date,open,high,low,close,volume,percentChangePrice,percentChangeVolumeOverLastWk,previousWeeksVolume,nextWeeksOpen,nextWeeksClose,percentChangeNextWeeksPrice,daysToNextDividend,percentReturnNextDividend
+quarter,stock,date,open,high,low,close,volume,percent_change_price,percent_change_volume_over_last_wk,previous_weeks_volume,next_weeks_open,next_weeks_close,percent_change_next_weeks_price,days_to_next_dividend,percent_return_next_dividend
 2,VZ,06/10/2011,35.57,36.14,35.16,35.19,72100710,-1.06832,43.70072643,50174214,35.23,35.51,0.794777,26,1.39244
 2,VZ,06/17/2011,35.23,35.92,34.94,35.51,69585912,0.794777,-3.487896305,72100710,35.35,36.00,1.83876,19,1.37989
 2,VZ,06/24/2011,35.35,36.17,35.20,36.00,82375230,1.83876,18.3791771,69585912,36.00,37.80,5,12,1.36111
