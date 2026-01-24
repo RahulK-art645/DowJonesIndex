@@ -48,6 +48,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
 
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.10.0</version>
+        </dependency>
 
         <!-- H2 Database -->
         <dependency>
