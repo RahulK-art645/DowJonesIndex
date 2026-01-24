@@ -54,8 +54,12 @@ public class StockDataService {
         }
         //File Format validations (CSV only)
         String filename= file.getOriginalFilename();
+        String contentType=file.getContentType();
         if (filename == null || !filename.toLowerCase().endsWith(".csv")){
             throw new BadRequestException("Only CSV files are allowed");
+        }
+        if (contentType == null || !(contentType.equals("application/vnd.ms-excel"))){
+            throw new BadRequestException("Invalid file type. Only CSV is allowed");
         }
 
         String fileHash= FileHashUtil.generateHash(file);

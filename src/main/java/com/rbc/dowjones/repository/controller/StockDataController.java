@@ -35,7 +35,8 @@ public class StockDataController {
     @Operation(summary = "Upload csv file for bulk stock data insert")
     @ApiResponses({@ApiResponse( responseCode= "200", description="File uploaded successfully")})
     @PostMapping(value="/bulk-insert", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BulkUploadResponseDto> uploadBulkData(@RequestPart("file") MultipartFile file){
+    public ResponseEntity<BulkUploadResponseDto> uploadBulkData(@RequestPart("file")
+                                                                    MultipartFile file){
 
         BulkUploadResponseDto respponse=stockDataService.uploadBulkData(file);
         return ResponseEntity.ok(respponse);
