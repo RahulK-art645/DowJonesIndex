@@ -42,7 +42,7 @@ public class CsvParserUtil {
             }
             for (int i=0; i<EXPECTED_HEADERS.size(); i++){
                 if (!headers[i].trim().equalsIgnoreCase(EXPECTED_HEADERS.get(i))){
-                    throw new CsvProcessingException("Invalid header at position " +i + " Expected: "+EXPECTED_HEADERS.get(i));
+                    throw new CsvProcessingException("Invalid header at position " + i + " Expected: "+EXPECTED_HEADERS.get(i));
                 }
             }
 
