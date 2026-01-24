@@ -96,6 +96,14 @@ public class StockDataController {
 
     }
 
+    @DeleteMapping("/bulk")
+    @Operation(summary = "Delete multiple stock records by IDs")
+    public ResponseEntity<String> deleteBulkStockData(@RequestBody List<Long> ids){
+        stockDataService.deleteBulk(ids);
+        return ResponseEntity.ok("Bulk stock data deleted successfully..");
+
+    }
+
     @Operation(summary = "Get all stock data")
     @GetMapping("/all")
     public ResponseEntity<CommonResponse<List<StockDataResponseDto>>> getAllStocks(){

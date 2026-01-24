@@ -300,5 +300,26 @@ public class StockDataService {
         }
         return entities.stream().map(StockDataMapper::toResponseDto).toList();
     }
+
+
+    @Transactional
+    public void deleteBulk(List<Long> ids) {
+        if (ids == null || ids.isEmpty()){
+            throw new BadRequestException("ID list can cnot be empty");
+        }
+
+        if (ids.stream().anyMatch(id->id == null || id <= 0)){
+            throw new BadRequestException("Invalid ID present in list");
+
+        }
+
+        List<StockData> existingRecords=repository.findAllById(ids);
+
+        if (existingRecords.isEmpty()){
+            throw new ResourceNotFoundException("No Stock records for given IDs");
+        }
+        repository.deleteAll(existingRecords);
+
+    }
 }
 
