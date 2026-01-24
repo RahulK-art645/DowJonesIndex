@@ -43,8 +43,11 @@ public class StockDataService {
     public BulkUploadResponseDto uploadBulkData(MultipartFile file){
 
         //Null / Empty Check
-        if (file == null || file.isEmpty()){
+        if (file == null){
             throw new BadRequestException("CSV file is required");
+        }
+        if (file.isEmpty() || file.getSize() == 0){
+            throw new BadRequestException("Sorry, csv file is empty");
         }
 
         //File size validations
@@ -71,12 +74,8 @@ public class StockDataService {
         try{
             records=csvParserUtil.parse(file);
 
-        }catch (Exception e){
-            throw new CsvProcessingException("Invalid CSV format or data issue");
-        }
-
-        if (records.isEmpty()){
-            throw new BadRequestException("No records found in CSV file");
+        }catch (CsvProcessingException e){
+            throw e;
         }
 
         if (records.size() > 100_000){
