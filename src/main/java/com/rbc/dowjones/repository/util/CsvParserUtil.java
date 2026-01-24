@@ -17,7 +17,9 @@ import java.util.Set;
 public class CsvParserUtil {
 
     private static final int EXPECTED_COLUMNS=16;
-    private static final List<String> EXPECTED_HEADERS=List.of("quarter","stock", "date",
+    private static final List<String> EXPECTED_HEADERS=List.of(
+            "quarter","stock",
+            "date",
             "open","high","low","close", "volume",
             "percentChangePrice","percentChangeVolumeOverLastWk",
             "previousWeeksVolume","nextWeeksOpen","nextWeeksClose",
