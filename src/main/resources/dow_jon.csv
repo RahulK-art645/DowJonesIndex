@@ -1,3 +1,4 @@
+quarter,stock,date,open,high,low,close,volume,percent_change_price,percent_change_volume_over_last_wk,previous_weeks_volume,next_weeks_open,next_weeks_close,percent_change_next_weeks_price,days_to_next_dividend,percent_return_next_dividend
 1,AA,2011-03-04,16.81,16.94,16.13,16.58,109493077,-1.36823,-17.66315005,132981863,16.58,16.03,-3.31725,69,0.180941
 1,AA,2011-03-11,16.58,16.75,15.42,16.03,114332562,-3.31725,4.419900447,109493077,15.95,16.11,1.00313,62,0.187149
 1,AA,2011-03-18,15.95,16.33,15.43,16.11,130374108,1.00313,14.03060136,114332562,16.38,17.09,4.33455,55,0.18622
