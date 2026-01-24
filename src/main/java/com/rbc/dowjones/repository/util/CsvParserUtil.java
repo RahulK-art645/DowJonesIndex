@@ -55,9 +55,12 @@ public class CsvParserUtil {
             int linenumber=1;
             for(CSVRecord record : csvParser){
                 linenumber++;
+                if (record == null || record.size() ==0){
+                    continue;
+                }
 
-                if (record.size() < EXPECTED_COLUMNS){
-                    throw new CsvProcessingException("Invalid columns count at line"+linenumber);
+                if (record.size() != EXPECTED_COLUMNS){
+                    throw new CsvProcessingException("Invalid columns count at line"+linenumber+". Expected "+ EXPECTED_COLUMNS + " but found " + record.size());
 
                 }
                 StockData data =new StockData();
