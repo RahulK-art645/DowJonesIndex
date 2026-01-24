@@ -66,7 +66,8 @@ public class CsvParserUtil {
                 String[] columns= line.split(",", -1);
 
                 if(columns.length != EXPECTED_COLUMNS){
-                    throw new CsvProcessingException("Invalida column count at line"+linenumber);// skip Invalid/ incomplete
+                    throw new CsvProcessingException("Invalid column count at line"+ linenumber+
+                            ". Expected "+ EXPECTED_COLUMNS +" but found "+columns.length);// skip Invalid/ incomplete
                 }
 
                 StockData data= new StockData();
