@@ -9,7 +9,9 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class CsvParserUtil {
@@ -24,6 +26,7 @@ public class CsvParserUtil {
 
         List<StockData> records=new ArrayList<>();
 
+        Set<String> csvKeys=new HashSet<>();
         try(BufferedReader reader = new BufferedReader(new
                 InputStreamReader(file.getInputStream()))){
 
@@ -97,6 +100,11 @@ public class CsvParserUtil {
 
                 data.setDaysToNextDividend(parseNullableInt(columns[14]));
                 data.setPercentReturnNextDividend(parseNullableBigDecimal(columns[15]));
+
+                String key=data.getStock()+"_"+data.getDate();
+                if (!csvKeys.add(key)){
+                    throw new CsvProcessingException("Duplicate record in csv stock" + data.getStock()+" on "+data.getDate() + " at line"+linenumber);
+                }
 
                 records.add(data);
             }

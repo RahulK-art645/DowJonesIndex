@@ -44,7 +44,7 @@ public class StockDataService {
 
         //Null / Empty Check
         if (file == null || file.isEmpty()){
-            throw new BadRequestException("Uploaded file is empty");
+            throw new BadRequestException("CSV file is required");
         }
 
         //File size validations
@@ -57,6 +57,7 @@ public class StockDataService {
         if (filename == null || !filename.toLowerCase().endsWith(".csv")){
             throw new BadRequestException("Only CSV files are allowed");
         }
+
         String fileHash= FileHashUtil.generateHash(file);
         if (uploadedFileRepository.existsByFileHash(fileHash)){
             throw new BadRequestException("This CSV file was already uploaded. Duplicate upload is not allowed");
@@ -69,8 +70,13 @@ public class StockDataService {
         }catch (Exception e){
             throw new CsvProcessingException("Invalid CSV format or data issue");
         }
+
         if (records.isEmpty()){
             throw new BadRequestException("No records found in CSV file");
+        }
+
+        if (records.size() > 100_000){
+            throw new CsvProcessingException("CSV record limit exceeded Maximum allowed is 100,000");
         }
 
 
