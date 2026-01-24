@@ -42,13 +42,26 @@ public class StockDataService {
     @Transactional
     public BulkUploadResponseDto uploadBulkData(MultipartFile file){
 
+        //Null / Empty Check
         if (file == null || file.isEmpty()){
             throw new BadRequestException("Uploaded file is empty");
+        }
+
+        //File size validations
+        long MAX_SIZE=5 * 1024 * 1024;
+        if (file.getSize() > MAX_SIZE){
+            throw new BadRequestException("File size exceeds 5MB limit");
+        }
+        //File Format validations (CSV only)
+        String filename= file.getOriginalFilename();
+        if (filename == null || !filename.toLowerCase().endsWith(".csv")){
+            throw new BadRequestException("Only CSV files are allowed");
         }
         String fileHash= FileHashUtil.generateHash(file);
         if (uploadedFileRepository.existsByFileHash(fileHash)){
             throw new BadRequestException("This CSV file was already uploaded. Duplicate upload is not allowed");
         }
+        //CSV parsing
         List<StockData> records;
         try{
             records=csvParserUtil.parse(file);

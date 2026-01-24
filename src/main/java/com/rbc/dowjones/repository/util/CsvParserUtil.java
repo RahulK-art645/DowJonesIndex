@@ -14,16 +14,39 @@ import java.util.List;
 @Component
 public class CsvParserUtil {
 
+    private static final int EXPECTED_COLUMNS=16;
+    private static final List<String> EXPECTED_HEADERS=List.of("quarter","stock", "date",
+            "open","high","low","close", "volume",
+            "percentChangePrice","percentChangeVolumeOverLastWk",
+            "previousWeeksVolume","nextWeeksOpen","nextWeeksClose",
+            "percentChangeNextWeeksPrice","daysToNextDividend","percentReturnNextDividend");
     public List<StockData> parse(MultipartFile file){
 
         List<StockData> records=new ArrayList<>();
 
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))){
+        try(BufferedReader reader = new BufferedReader(new
+                InputStreamReader(file.getInputStream()))){
+
+            String headerLine=reader.readLine();
+            if (headerLine == null){
+                throw new CsvProcessingException("CSV file is empty");
+            }
+
+            String[] headers=headerLine.split(",", -1);
+
+            if (headers.length < EXPECTED_COLUMNS){
+                throw  new CsvProcessingException("Invalid CSV header. Expected 16 columns");
+            }
+            for (int i=0; i<EXPECTED_HEADERS.size(); i++){
+                if (!headers[i].trim().equalsIgnoreCase(EXPECTED_HEADERS.get(i))){
+                    throw new CsvProcessingException("Invalid header at position " +i + " Expected: "+EXPECTED_HEADERS.get(i));
+                }
+            }
 
             String line;
             int linenumber=1;
 
-            reader.readLine();
+            /* ROW PROCESSING*/
 
             while((line=reader.readLine()) != null){
 
@@ -33,7 +56,7 @@ public class CsvParserUtil {
                 }
                 String[] columns= line.split(",", -1);
 
-                if(columns.length < 16){
+                if(columns.length < EXPECTED_COLUMNS){
                     throw new CsvProcessingException("Invalida column count at line"+linenumber);// skip Invalid/ incomplete
                 }
 
@@ -51,13 +74,18 @@ public class CsvParserUtil {
                 }
                 data.setStock(stock);
 
-                data.setDate(LocalDate.parse(columns[2]));
 
-                data.setOpen(parseNullableBigDecimal(columns[3]));
-                data.setHigh(parseNullableBigDecimal(columns[4]));
-                data.setLow(parseNullableBigDecimal(columns[5]));
-                data.setClose(parseNullableBigDecimal(columns[6]));
-                data.setVolume(parseNullableLong(columns[7]));
+                try {
+                    data.setDate(LocalDate.parse(columns[2]));
+
+                }catch (Exception e){
+                    throw new CsvProcessingException("Invalid date at line"+linenumber);
+                }
+                data.setOpen(parsePositiveBigDecimal(columns[3],"open", linenumber));
+                data.setHigh(parsePositiveBigDecimal(columns[4],"high", linenumber));
+                data.setLow(parsePositiveBigDecimal(columns[5],"low", linenumber));
+                data.setClose(parsePositiveBigDecimal(columns[6], "close", linenumber));
+                data.setVolume(parsePositiveLong(columns[7],"volume",linenumber));
 
                 data.setPercentChangePrice(parseNullableBigDecimal(columns[8]));
                 data.setPercentChangeVolumeOverLastWk(parseNullableBigDecimal(columns[9]));
@@ -73,8 +101,14 @@ public class CsvParserUtil {
                 records.add(data);
             }
 
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse CSV file", e);
+        } catch (CsvProcessingException e) {
+            throw e;
+
+        }catch (Exception e){
+            throw new CsvProcessingException("Failed to parse CSV file");
+        }
+        if (records.isEmpty()){
+            throw new CsvProcessingException("No valid records found in CSV file");
         }
 
         return records;
@@ -91,7 +125,6 @@ public class CsvParserUtil {
        if(value.isEmpty()) return null;
 
        try{
-
            return new BigDecimal(value);
        }catch(NumberFormatException e){
            return null;
@@ -127,5 +160,28 @@ public class CsvParserUtil {
         }
     }
 
+    private BigDecimal parsePositiveBigDecimal(String v, String field, int line){
+
+        BigDecimal val=parseNullableBigDecimal(v);
+        if(val == null || val.compareTo(BigDecimal.ZERO)<=0){
+
+            throw new CsvProcessingException("Invalid" +field +"at line" +line+".Must be > 0");
+
+
+        }
+        return val;
+
+    }
+
+    private Long parsePositiveLong(String v, String field, int line){
+
+
+        Long val=parseNullableLong(v);
+        if (val == null || val<=0){
+            throw new CsvProcessingException("Invalid"+field+"at line"+line+ ". Must be >0");
+        }
+        return val;
+
+    }
 
 }
