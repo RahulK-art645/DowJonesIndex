@@ -1,9 +1,6 @@
 package com.rbc.dowjones.repository.controller;
 
-import com.rbc.dowjones.repository.dto.BulkUploadResponseDto;
-import com.rbc.dowjones.repository.dto.CommonResponse;
-import com.rbc.dowjones.repository.dto.StockDataRequestDto;
-import com.rbc.dowjones.repository.dto.StockDataResponseDto;
+import com.rbc.dowjones.repository.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -98,8 +95,8 @@ public class StockDataController {
 
     @DeleteMapping("/bulk")
     @Operation(summary = "Delete multiple stock records by IDs")
-    public ResponseEntity<String> deleteBulkStockData(@RequestBody List<Long> ids){
-        stockDataService.deleteBulk(ids);
+    public ResponseEntity<String> deleteBulkStockData(@Valid @RequestBody BulkDeleteRequestDto requestDto){
+        stockDataService.deleteBulk(requestDto.getIds());
         return ResponseEntity.ok("Bulk stock data deleted successfully..");
 
     }
