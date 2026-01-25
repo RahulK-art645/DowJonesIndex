@@ -12,6 +12,7 @@ import com.rbc.dowjones.repository.model.UploadedFile;
 import com.rbc.dowjones.repository.repository.StockDataRepository;
 import com.rbc.dowjones.repository.repository.UploadedFileRepository;
 import com.rbc.dowjones.repository.util.CsvParserUtil;
+import com.rbc.dowjones.repository.util.ExcelParserUtil;
 import com.rbc.dowjones.repository.util.FileHashUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -33,12 +34,13 @@ public class StockDataService {
     private final StockDataRepository repository;
 
     private final CsvParserUtil csvParserUtil;
+    private final ExcelParserUtil excelParserUtil;
 
-    public StockDataService(StockDataRepository repository, CsvParserUtil csvParserUtil, UploadedFileRepository uploadedFileRepository){
+    public StockDataService(StockDataRepository repository, CsvParserUtil csvParserUtil, ExcelParserUtil excelParserUtil, UploadedFileRepository uploadedFileRepository){
 
         this.repository=repository;
         this.csvParserUtil=csvParserUtil;
-
+        this.excelParserUtil=excelParserUtil;
         this.uploadedFileRepository=uploadedFileRepository;
     }
 
@@ -63,28 +65,36 @@ public class StockDataService {
         //File Format validations (CSV only)
         String filename= file.getOriginalFilename();
 
-        if (filename == null || !filename.toLowerCase().endsWith(".csv")){
-            throw new BadRequestException("Only CSV files are allowed");
+        if (filename == null){
+            throw new BadRequestException("Invalid file name");
         }
 
 
         String fileHash= FileHashUtil.generateHash(file);
         if (uploadedFileRepository.existsByFileHash(fileHash)){
-            throw new BadRequestException("This CSV file was already uploaded. Duplicate upload is not allowed");
+            throw new BadRequestException("This file was already uploaded. Duplicate upload is not allowed");
         }
         //CSV parsing
         List<StockData> records;
         try{
-            records=csvParserUtil.parse(file);
-            log.info("CSV PARSED SUCCESSFULLY | totalRecords={}", records.size());
+            if (filename.toLowerCase().endsWith(".csv")){
+                records=csvParserUtil.parse(file);
+                log.info("CSV PARSED SUCCESSFULLY | totalRecords={}", records.size());
+            } else if (filename.toLowerCase().endsWith(".xlsx")){
+                records=excelParserUtil.parse(file);
+                log.info("XLSX PARSED SUCCESSFULLY | totalRecords={}", records.size());
+
+            } else {
+                throw new BadRequestException("Only CSV or XLSX files are allowed");
+            }
 
         }catch (CsvProcessingException e){
-            log.error("CSV PARSED FAILED | file={}", file.getOriginalFilename(), e);
-            throw e;
+            log.error("CSV PARSED FAILED | file={}", filename, e);
+            throw new CsvProcessingException("Failed to parse uploaded files");
         }
 
         if (records.size() > 100_000){
-            throw new CsvProcessingException("CSV record limit exceeded Maximum allowed is 100,000");
+            throw new CsvProcessingException("record limit exceeded Maximum allowed is 100000");
         }
 
 
