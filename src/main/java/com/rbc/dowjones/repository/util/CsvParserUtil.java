@@ -2,6 +2,7 @@ package com.rbc.dowjones.repository.util;
 
 import com.rbc.dowjones.repository.exception.CsvProcessingException;
 import com.rbc.dowjones.repository.model.StockData;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-
+@Slf4j
 @Component
 public class CsvParserUtil {
 
@@ -30,6 +31,8 @@ public class CsvParserUtil {
    private static final DateTimeFormatter DATE_FORMAT=DateTimeFormatter.ofPattern("M/d/yyy");
 
    public List<StockData> parse(MultipartFile file){
+
+       log.info("CSV PARSING STARTED | file={}", file.getOriginalFilename());
 
         List<StockData> records=new ArrayList<>();
 
@@ -47,6 +50,7 @@ public class CsvParserUtil {
 
                 for(String expected : EXPECTED_HEADERS){
                     if (!headerMap.containsKey(expected)){
+                        log.error("CSV HEADER MISSING | header={}",expected);
                         throw new CsvProcessingException("Missing required header" + expected);
                     }
                 }
@@ -55,6 +59,8 @@ public class CsvParserUtil {
             int linenumber=1;
             for(CSVRecord record : csvParser){
                 linenumber++;
+
+                log.debug("Parsing CSV row | line={}", linenumber);
                 if (record == null || record.size() ==0){
                     continue;
                 }
@@ -92,6 +98,8 @@ public class CsvParserUtil {
 
                 String key=data.getStock()+"_"+data.getDate();
                 if (!csvKeys.add(key)){
+
+                    log.error("DUPLICATE CSV RECORD | stock={} | date={} | line={}", data.getStock(), data.getDate(), linenumber);
                     throw new CsvProcessingException("Duplicate record in csv stock" + data.getStock()+" on date "+data.getDate() + " at line"+linenumber);
                 }
 
@@ -99,15 +107,19 @@ public class CsvParserUtil {
             }
 
         } catch (CsvProcessingException e) {
+            log.error("CSV PARSING FAILED | file={} | reason={}",file.getOriginalFilename(), e.getMessage());
             throw e;
 
         }catch (Exception e){
+            log.error("CSV PARSING FAILED | file={}", file.getOriginalFilename(),e);
             throw new CsvProcessingException("Failed to parse CSV file");
         }
         if (records.isEmpty()){
+            log.warn("CSV PARSING COMPLETED | No valid records found | file={}", file.getOriginalFilename());
             throw new CsvProcessingException("No valid records found in CSV file");
         }
 
+        log.info("CSV PARSING COMPLETED | totalRecords={}", records.size());
         return records;
     }
 

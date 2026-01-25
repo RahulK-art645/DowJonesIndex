@@ -4,6 +4,9 @@ import com.rbc.dowjones.repository.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/stock-data")
 @Validated
@@ -38,7 +42,13 @@ public class StockDataController {
     public ResponseEntity<BulkUploadResponseDto> uploadBulkData(@RequestPart("file")
                                                                     MultipartFile file){
 
+        log.info("API HIT: /bulk-insert | fileName={} | size={}", file.getOriginalFilename(), file.getSize());
+
         BulkUploadResponseDto respponse=stockDataService.uploadBulkData(file);
+
+        log.info("API SUCCESS: total={}, inserted={}, updated={},deleted={}, alreadyExists={} ",
+                respponse.getTotalRecords(),respponse.getInsertRecords(),
+                respponse.getUpdatedRecords(), respponse.getDeletedRecords(), respponse.getAlreadyExistingRecords());
         return ResponseEntity.ok(respponse);
     }
 

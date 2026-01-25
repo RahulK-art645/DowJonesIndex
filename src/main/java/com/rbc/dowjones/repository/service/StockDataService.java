@@ -13,6 +13,9 @@ import com.rbc.dowjones.repository.repository.StockDataRepository;
 import com.rbc.dowjones.repository.repository.UploadedFileRepository;
 import com.rbc.dowjones.repository.util.CsvParserUtil;
 import com.rbc.dowjones.repository.util.FileHashUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +25,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class StockDataService {
 
@@ -42,6 +46,7 @@ public class StockDataService {
     @Transactional
     public BulkUploadResponseDto uploadBulkData(MultipartFile file){
 
+        log.info("UPLOAD STARTED | fileName={}, size={} bytes", file.getOriginalFilename(), file.getSize());
         //Null / Empty Check
         if (file == null){
             throw new BadRequestException("CSV file is required");
@@ -71,8 +76,10 @@ public class StockDataService {
         List<StockData> records;
         try{
             records=csvParserUtil.parse(file);
+            log.info("CSV PARSED SUCCESSFULLY | totalRecords={}", records.size());
 
         }catch (CsvProcessingException e){
+            log.error("CSV PARSED FAILED | file={}", file.getOriginalFilename(), e);
             throw e;
         }
 
@@ -113,6 +120,7 @@ public class StockDataService {
             }
         }
 
+        log.info("Bulk upload completed | inserted={} updated={} deleted={} alreadyExists={}",inserted,updated,deleted, alreadyExists);
         UploadedFile uploadedFile=new UploadedFile();
         uploadedFile.setFileHash(fileHash);
         uploadedFileRepository.save(uploadedFile);
