@@ -134,13 +134,18 @@ public class CsvParserUtil {
 return v.trim();
     }
 
-    private LocalDate parseDate(String v, int line){
+    private LocalDate parseDate(String v, int line) {
 
-       try{
-           return LocalDate.parse(v.trim(),DATE_FORMAT);
-       }catch (Exception e){
-           throw new CsvProcessingException("Invalid date at line"+line);
-       }
+        try {
+            return LocalDate.parse(v, DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (Exception e) {
+            try {
+                return LocalDate.parse(v, DateTimeFormatter.ofPattern("M/d/yyy"));
+            } catch (Exception e2) {
+
+                throw new CsvProcessingException("Invalid date at line" + line);
+            }
+        }
     }
 
     // ---------- helper methods ----------
