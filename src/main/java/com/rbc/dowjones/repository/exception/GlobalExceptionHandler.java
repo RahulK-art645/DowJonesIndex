@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
         log.error("RESOURCE NOT FOUND | message={}", ex.getMessage(),ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).
                 body(new ErrorResponseDto(ex.getMessage(),
-                        HttpStatus.NO_CONTENT.value(), LocalDateTime.now()));
+                        HttpStatus.NOT_FOUND.value(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(CsvProcessingException.class)
