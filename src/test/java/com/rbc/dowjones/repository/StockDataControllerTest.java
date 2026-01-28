@@ -35,7 +35,7 @@ public class StockDataControllerTest {
         mockMvc.perform(post("/api/stock-data/add").contentType(MediaType.
                 APPLICATION_JSON).content("""
     {
-    "quarter":2
+    "quarter":2,
     "stock":"IBM",
     "date":"2024-01-22",
     "open": "29.80",
