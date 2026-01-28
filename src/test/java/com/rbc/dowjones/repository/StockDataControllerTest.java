@@ -51,7 +51,7 @@ public class StockDataControllerTest {
     "daysToNextDividend":4.90,
     "percentReturnNextDividend":5.60
     }
-    """)).andExpect(status().isOk());
+    """)).andExpect(status().isCreated());
 
     }
 
