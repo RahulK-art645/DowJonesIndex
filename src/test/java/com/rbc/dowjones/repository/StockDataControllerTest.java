@@ -35,13 +35,21 @@ public class StockDataControllerTest {
         mockMvc.perform(post("/api/stock-data/add").contentType(MediaType.
                 APPLICATION_JSON).content("""
     {
-    "stock":"CSCO",
-    "date":"2020-01-01",
-    "open": "29",
-    "high": "87",
-    "close": "34",
-    "low": 7,
-    "volume": 1000
+    "quarter":2
+    "stock":"IBM",
+    "date":"2024-01-22",
+    "open": "29.80",
+    "high": "87.70",
+    "close": "3.60",
+    "low": 7.60,
+    "volume": 1000,
+    "percentChangePrice":-5.20,
+    "percentChangeVolumeOverLastWk":-2.10,
+    "previousWeeksVolume":950,
+    "nextWeeksOpen":12.20,
+    "nextWeeksClose":2.90,
+    "daysToNextDividend":4.90,
+    "percentReturnNextDividend":5.60
     }
     """)).andExpect(status().isOk());
 
