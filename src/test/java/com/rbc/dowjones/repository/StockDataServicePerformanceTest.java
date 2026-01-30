@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles("perf")
-@Disabled("Performance test - run manually")
 public class StockDataServicePerformanceTest {
 
     @Autowired
