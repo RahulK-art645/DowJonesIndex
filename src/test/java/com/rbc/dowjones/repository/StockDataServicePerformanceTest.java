@@ -15,12 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-@ActiveProfiles("perf")
+@ActiveProfiles("test")
 //@Disabled("Manual performance test. Fails on duplicate file hash as expected")
 public class StockDataServicePerformanceTest {
 
     @Value("${performance.test.csv.file}")
     private String csvFileName;
+
     @Autowired
     private StockDataService stockDataService;
 
