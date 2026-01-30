@@ -5,6 +5,7 @@ import com.rbc.dowjones.repository.service.StockDataService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -15,9 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles("perf")
-@Disabled("Manual performance test. Fails on duplicate file hash as expected")
+//@Disabled("Manual performance test. Fails on duplicate file hash as expected")
 public class StockDataServicePerformanceTest {
 
+    @Value("${performance.test.csv.file}")
+    private String csvFileName;
     @Autowired
     private StockDataService stockDataService;
 
@@ -29,7 +32,7 @@ public class StockDataServicePerformanceTest {
                 "file",
                 "dow_jones_index.csv",
                 "text/csv",
-                new ClassPathResource("dow_jones_index.csv").getInputStream()
+                new ClassPathResource(csvFileName).getInputStream()
         );
 
         //  Measure execution time
